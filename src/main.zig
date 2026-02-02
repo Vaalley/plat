@@ -1,10 +1,8 @@
 const rl = @import("raylib");
 
 const player_mod = @import("player.zig");
-const Player = player_mod.Player;
-
 const input_mod = @import("input.zig");
-const InputState = input_mod.InputState;
+const level_mod = @import("level.zig");
 
 pub fn main() anyerror!void {
     // Initialization phase - set up window and basic systems
@@ -20,8 +18,9 @@ pub fn main() anyerror!void {
     // rl.setTargetFPS(60);
 
     // Initialize game objects
-    var player: Player = player_mod.init();
+    var player: player_mod.Player = player_mod.init();
     var input = input_mod.init();
+    var level: level_mod.Level = level_mod.init();
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
@@ -31,7 +30,7 @@ pub fn main() anyerror!void {
         input_mod.update(&input);
 
         // Update phase - process game logic
-        player_mod.update(&player, input, deltaTime);
+        player_mod.update(&player, deltaTime, input, &level);
 
         // Physics phase - resolve movement and collisions
         // ResolveCollisions();
@@ -44,5 +43,6 @@ pub fn main() anyerror!void {
         rl.drawFPS(10, 10);
 
         player_mod.draw(&player);
+        level_mod.draw(&level);
     }
 }
