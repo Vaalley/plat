@@ -8,8 +8,8 @@ pub const Level = struct {
 pub fn init() Level {
     return Level{
         .platforms = [_]platform_mod.Platform{
-            platform_mod.init(rl.Vector2{ .x = 100, .y = 500 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green),
-            platform_mod.init(rl.Vector2{ .x = 600, .y = 400 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green),
+            platform_mod.init(rl.Vector2{ .x = 100, .y = 650 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green),
+            platform_mod.init(rl.Vector2{ .x = 350, .y = 580 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green),
         },
     };
 }
