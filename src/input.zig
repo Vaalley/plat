@@ -8,6 +8,7 @@ pub const InputState = struct {
 
     // Actions
     jump: bool,
+    dash: bool,
 };
 
 pub fn init() InputState {
@@ -15,6 +16,7 @@ pub fn init() InputState {
         .move_left = false,
         .move_right = false,
         .jump = false,
+        .dash = false,
     };
 }
 
@@ -25,4 +27,5 @@ pub fn update(input: *InputState) void {
 
     // Update action states
     input.jump = rl.isKeyDown(.space);
+    input.dash = rl.isKeyDown(.left_shift);
 }

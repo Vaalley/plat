@@ -13,6 +13,8 @@ pub const Player = struct {
     moveSpeed: f32,
     jumpPower: f32,
     gravity: f32,
+    dashCooldown: f32,
+    dashPower: f32,
 
     // Collision
     hitboxWidth: f32,
@@ -26,8 +28,10 @@ pub fn init() Player {
         .velocity = .{ .x = 0, .y = 0 },
         .acceleration = .{ .x = 0, .y = 0 },
         .moveSpeed = 200,
-        .jumpPower = 400,
-        .gravity = 800,
+        .jumpPower = 550,
+        .gravity = 1500,
+        .dashPower = 800,
+        .dashCooldown = 0,
         .hitboxWidth = 32,
         .hitboxHeight = 64,
         .isGrounded = false,
@@ -37,14 +41,14 @@ pub fn init() Player {
 pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, level: *level_mod.Level) void {
     handleMovement(player, input);
     handleJump(player, input);
+    // Reset grounded state
+    player.isGrounded = false;
+    handleDash(player, input, deltaTime);
 
     // Apply Gravity (could be moved to a separate function in the future, for now it's simple)
     player.velocity.y += player.gravity * deltaTime;
 
     updatePosition(player, deltaTime);
-
-    // Reset grounded state
-    player.isGrounded = false;
 
     resolveCollisions(player, level);
 }
@@ -67,6 +71,9 @@ pub fn getHitbox(player: *Player) rl.Rectangle {
 }
 
 fn handleMovement(player: *Player, input: input_mod.InputState) void {
+    // During dash, don't allow movement input (for the first 0.2 seconds) - A dash is 1 second long
+    if (player.dashCooldown > 0.8) return;
+
     if (input.move_left and !input.move_right) {
         player.velocity.x = -player.moveSpeed;
     } else if (input.move_right and !input.move_left) {
@@ -110,5 +117,20 @@ fn resolveCollisions(player: *Player, level: *level_mod.Level) void {
             player.position.y = platform.hitbox.y - player.hitboxHeight;
             player.velocity.y = 0;
         }
+    }
+}
+
+fn handleDash(player: *Player, input: input_mod.InputState, deltaTime: f32) void {
+    // Decrease cooldown
+    if (player.dashCooldown > 0) {
+        player.dashCooldown -= deltaTime;
+    }
+
+    // Start dash
+    if (input.dash and player.dashCooldown <= 0) {
+        // Dash in current facing direction
+        const dashDirection: f32 = if (player.velocity.x >= 0) 1.0 else -1.0;
+        player.velocity.x = dashDirection * player.dashPower;
+        player.dashCooldown = 1.0; // 1 second until next dash
     }
 }
