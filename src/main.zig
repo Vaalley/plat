@@ -5,6 +5,17 @@ const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
 const camera_mod = @import("camera.zig");
 
+fn drawDebugHUD(player: *player_mod.Player, level: *level_mod.Level, camera: *camera_mod.Camera) void {
+    _ = player;
+    _ = level;
+    _ = camera;
+    const fontSize = 20;
+
+    // TODO: Implement debug HUD drawing
+    rl.drawText("Debug HUD", 10, 10, fontSize, rl.Color.black);
+    rl.drawFPS(10, 20 + fontSize);
+}
+
 pub fn main() anyerror!void {
     // Initialization phase - set up window and basic systems
     const screenWidth = 1280;
@@ -50,7 +61,9 @@ pub fn main() anyerror!void {
 
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
-        rl.drawFPS(10, 10);
+        if (input.show_debug) {
+            drawDebugHUD(&player, &level, &camera);
+        }
         rl.endDrawing();
     }
 }

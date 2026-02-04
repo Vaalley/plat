@@ -9,6 +9,9 @@ pub const InputState = struct {
     // Actions
     jump: bool,
     dash: bool,
+
+    // Debug
+    show_debug: bool,
 };
 
 pub fn init() InputState {
@@ -17,6 +20,7 @@ pub fn init() InputState {
         .move_right = false,
         .jump = false,
         .dash = false,
+        .show_debug = false,
     };
 }
 
@@ -28,4 +32,9 @@ pub fn update(input: *InputState) void {
     // Update action states
     input.jump = rl.isKeyDown(.space);
     input.dash = rl.isKeyDown(.left_shift);
+
+    // Update debug state
+    if (rl.isKeyPressed(.f1)) {
+        input.show_debug = !input.show_debug;
+    }
 }
