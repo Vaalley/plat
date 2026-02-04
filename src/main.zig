@@ -11,7 +11,7 @@ pub fn main() anyerror!void {
 
     rl.setConfigFlags(.{ .window_resizable = true, .vsync_hint = true });
 
-    rl.initWindow(screenWidth, screenHeight, "2D Platformer");
+    rl.initWindow(screenWidth, screenHeight, "plat");
     defer rl.closeWindow(); // Close window and OpenGL context
     rl.setWindowMinSize(720, 480);
 
