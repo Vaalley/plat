@@ -38,18 +38,26 @@ pub fn init() Player {
     };
 }
 
+pub fn reset(player: *Player) void {
+    player.position = .{ .x = 100, .y = 100 };
+    player.velocity = .{ .x = 0, .y = 0 };
+    player.acceleration = .{ .x = 0, .y = 0 };
+    player.dashCooldown = 0;
+    player.isGrounded = false;
+}
+
 pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, level: *level_mod.Level) void {
     handleMovement(player, input);
     handleJump(player, input);
-    // Reset grounded state
-    player.isGrounded = false;
     handleDash(player, input, deltaTime);
 
-    // Apply Gravity (could be moved to a separate function in the future, for now it's simple)
+    // Reset grounded state before collision resolution
+    player.isGrounded = false;
+
+    // Gravity
     player.velocity.y += player.gravity * deltaTime;
 
     updatePosition(player, deltaTime);
-
     resolveCollisions(player, level);
 }
 
@@ -97,9 +105,7 @@ fn updatePosition(player: *Player, deltaTime: f32) void {
     player.position.y += player.velocity.y * deltaTime;
 
     if (player.position.y > DEATH_Y) {
-        // Respawn or game over
-        player.position = .{ .x = 100, .y = 100 };
-        player.velocity = .{ .x = 0, .y = 0 };
+        reset(player);
     }
 }
 
