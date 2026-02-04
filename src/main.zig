@@ -3,6 +3,7 @@ const rl = @import("raylib");
 const player_mod = @import("player.zig");
 const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
+const camera_mod = @import("camera.zig");
 
 pub fn main() anyerror!void {
     // Initialization phase - set up window and basic systems
@@ -21,6 +22,7 @@ pub fn main() anyerror!void {
     var player: player_mod.Player = player_mod.init();
     var input = input_mod.init();
     var level: level_mod.Level = level_mod.init();
+    var camera: camera_mod.Camera = camera_mod.init(screenWidth, screenHeight);
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
@@ -35,14 +37,20 @@ pub fn main() anyerror!void {
         // Physics phase - resolve movement and collisions
         // ResolveCollisions();
 
+        // Camera phase - update camera position
+        camera_mod.update(&camera, &player);
+
         // Draw phase - render everything
         rl.beginDrawing();
-        defer rl.endDrawing();
-
         rl.clearBackground(.white);
-        rl.drawFPS(10, 10);
+        rl.beginMode2D(camera.camera);
 
         player_mod.draw(&player);
         level_mod.draw(&level);
+
+        // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
+        rl.endMode2D();
+        rl.drawFPS(10, 10);
+        rl.endDrawing();
     }
 }
