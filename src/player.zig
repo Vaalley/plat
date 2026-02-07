@@ -62,11 +62,7 @@ pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, leve
 }
 
 pub fn draw(player: *Player) void {
-    rl.drawRectangleV(
-        player.position,
-        .{ .x = player.hitboxWidth, .y = player.hitboxHeight },
-        .{ .r = 255, .g = 0, .b = 0, .a = 255 },
-    );
+    rl.drawRectangleV(player.position, .{ .x = player.hitboxWidth, .y = player.hitboxHeight }, rl.Color.orange);
 }
 
 pub fn getHitbox(player: *Player) rl.Rectangle {

@@ -1,19 +1,34 @@
 const rl = @import("raylib");
+const std = @import("std");
 
 const player_mod = @import("player.zig");
 const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
 const camera_mod = @import("camera.zig");
 
+fn debugText(y: *i32, fontSize: i32, comptime fmt: []const u8, args: anytype) void {
+    var buf: [64]u8 = undefined;
+    const text = std.fmt.bufPrintZ(&buf, fmt, args) catch "error";
+    rl.drawText(text, 10, y.*, fontSize, rl.Color.black);
+    y.* += fontSize + 5;
+}
+
 fn drawDebugHUD(player: *player_mod.Player, level: *level_mod.Level, camera: *camera_mod.Camera) void {
-    _ = player;
-    _ = level;
-    _ = camera;
     const fontSize = 20;
 
+    var y: i32 = 10;
     // TODO: Implement debug HUD drawing
-    rl.drawText("Debug HUD", 10, 10, fontSize, rl.Color.black);
-    rl.drawFPS(10, 20 + fontSize);
+    rl.drawText("Debug HUD", 10, y, fontSize, rl.Color.black);
+    rl.drawFPS(10, y + fontSize);
+
+    y += 40;
+    const deltaTime: f32 = rl.getFrameTime();
+    debugText(&y, fontSize, "Delta time: {d:.5}", .{deltaTime});
+    debugText(&y, fontSize, "Player Position: ({d:.2}, {d:.2})", .{ player.position.x, player.position.y });
+    debugText(&y, fontSize, "Player isGrounded: {s}", .{if (player.isGrounded) "YES" else "NO"});
+    debugText(&y, fontSize, "Player dashCooldown: {d:.2}", .{player.dashCooldown});
+    debugText(&y, fontSize, "Platform count: {d}", .{level.platforms.len});
+    debugText(&y, fontSize, "Camera target position: ({d:.2}, {d:.2})", .{ camera.camera.target.x, camera.camera.target.y });
 }
 
 pub fn main() anyerror!void {
