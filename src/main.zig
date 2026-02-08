@@ -26,6 +26,7 @@ fn drawDebugHUD(player: *player_mod.Player, level: *level_mod.Level, camera: *ca
     debugText(&y, fontSize, "Delta time: {d:.5}", .{deltaTime});
     debugText(&y, fontSize, "Player Position: ({d:.2}, {d:.2})", .{ player.position.x, player.position.y });
     debugText(&y, fontSize, "Player isGrounded: {s}", .{if (player.isGrounded) "YES" else "NO"});
+    debugText(&y, fontSize, "Player jumpsRemaining: {d}", .{player.jumpsRemaining});
     debugText(&y, fontSize, "Player dashCooldown: {d:.2}", .{player.dashCooldown});
     debugText(&y, fontSize, "Platform count: {d}", .{level.platforms.len});
     debugText(&y, fontSize, "Camera target position: ({d:.2}, {d:.2})", .{ camera.camera.target.x, camera.camera.target.y });

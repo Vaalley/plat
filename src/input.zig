@@ -30,7 +30,7 @@ pub fn update(input: *InputState) void {
     input.move_right = rl.isKeyDown(.d) or rl.isKeyDown(.right);
 
     // Update action states
-    input.jump = rl.isKeyDown(.space);
+    input.jump = rl.isKeyPressed(.space);
     input.dash = rl.isKeyDown(.left_shift);
 
     // Update debug state

@@ -11,8 +11,9 @@ pub const Player = struct {
 
     // Movement parameters
     moveSpeed: f32,
-    jumpPower: f32,
     gravity: f32,
+    jumpPower: f32,
+    jumpsRemaining: u32,
     dashCooldown: f32,
     dashPower: f32,
 
@@ -32,6 +33,7 @@ pub fn init() Player {
         .gravity = 1500,
         .dashPower = 800,
         .dashCooldown = 0,
+        .jumpsRemaining = 2,
         .hitboxWidth = 32,
         .hitboxHeight = 64,
         .isGrounded = false,
@@ -59,6 +61,9 @@ pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, leve
 
     updatePosition(player, deltaTime);
     resolveCollisions(player, level);
+    if (player.isGrounded) {
+        player.jumpsRemaining = 2;
+    }
 }
 
 pub fn draw(player: *Player) void {
@@ -88,9 +93,10 @@ fn handleMovement(player: *Player, input: input_mod.InputState) void {
 }
 
 fn handleJump(player: *Player, input: input_mod.InputState) void {
-    if (input.jump and player.isGrounded) {
+    if (input.jump and (player.isGrounded or player.jumpsRemaining > 0)) {
         player.velocity.y = -player.jumpPower;
         player.isGrounded = false;
+        player.jumpsRemaining -= 1;
     }
 }
 
