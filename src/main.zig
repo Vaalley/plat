@@ -80,6 +80,10 @@ pub fn main() anyerror!void {
         if (input.show_debug) {
             drawDebugHUD(&player, &level, &camera);
         }
+
+        var buf: [64]u8 = undefined;
+        const text = std.fmt.bufPrintZ(&buf, "Coins: {d}", .{player.coinsCollected}) catch "error";
+        rl.drawText(text, @intCast(screenWidth - 100), 10, 20, rl.Color.black);
         rl.endDrawing();
     }
 }

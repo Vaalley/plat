@@ -21,6 +21,9 @@ pub const Player = struct {
     hitboxWidth: f32,
     hitboxHeight: f32,
     isGrounded: bool,
+
+    // Collectibles
+    coinsCollected: u32,
 };
 
 pub fn init() Player {
@@ -37,6 +40,7 @@ pub fn init() Player {
         .hitboxWidth = 32,
         .hitboxHeight = 64,
         .isGrounded = false,
+        .coinsCollected = 0,
     };
 }
 
@@ -46,6 +50,7 @@ pub fn reset(player: *Player) void {
     player.acceleration = .{ .x = 0, .y = 0 };
     player.dashCooldown = 0;
     player.isGrounded = false;
+    player.coinsCollected = 0;
 }
 
 pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, level: *level_mod.Level) void {
@@ -124,6 +129,14 @@ fn resolveCollisions(player: *Player, level: *level_mod.Level) void {
             player.isGrounded = true;
             player.position.y = platform.hitbox.y - player.hitboxHeight;
             player.velocity.y = 0;
+        }
+    }
+
+    // Coins
+    for (level_mod.getCoins(level)) |*coin| {
+        if (!coin.isCollected and rl.checkCollisionCircleRec(coin.position, coin.radius, getHitbox(player))) {
+            coin.isCollected = true;
+            player.coinsCollected += 1;
         }
     }
 }
