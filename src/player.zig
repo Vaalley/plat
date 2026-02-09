@@ -91,7 +91,7 @@ pub fn getHitbox(player: *Player) rl.Rectangle {
 
 fn handleMovement(player: *Player, input: input_mod.InputState) void {
     // During dash, don't allow movement input (for the first 0.2 seconds) - A dash is 1 second long
-    if (player.dashCooldown > DASH_LOCKOUT_DURATION) return;
+    if (player.dashCooldown > DASH_COOLDOWN - DASH_LOCKOUT_DURATION) return;
 
     if (input.move_left and !input.move_right) {
         player.velocity.x = -player.moveSpeed;
