@@ -28,11 +28,3 @@ pub fn draw(level: *Level) void {
         coin_mod.draw(&coin);
     }
 }
-
-pub fn getPlatforms(level: *const Level) []const platform_mod.Platform {
-    return &level.platforms;
-}
-
-pub fn getCoins(level: *Level) []coin_mod.Coin {
-    return &level.coins;
-}

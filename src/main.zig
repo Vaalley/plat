@@ -5,31 +5,30 @@ const player_mod = @import("player.zig");
 const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
 const camera_mod = @import("camera.zig");
-
-fn debugText(y: *i32, fontSize: i32, comptime fmt: []const u8, args: anytype) void {
-    var buf: [64]u8 = undefined;
-    const text = std.fmt.bufPrintZ(&buf, fmt, args) catch "error";
-    rl.drawText(text, 10, y.*, fontSize, rl.Color.black);
-    y.* += fontSize + 5;
-}
+const ui = @import("ui.zig");
 
 fn drawDebugHUD(player: *player_mod.Player, level: *level_mod.Level, camera: *camera_mod.Camera) void {
     const fontSize = 20;
 
     var y: i32 = 10;
-    // TODO: Implement debug HUD drawing
-    rl.drawText("Debug HUD", 10, y, fontSize, rl.Color.black);
-    rl.drawFPS(10, y + fontSize);
+    ui.drawText(10, y, fontSize, rl.Color.black, "Debug HUD", .{});
+    ui.drawText(10, y + fontSize, fontSize, rl.Color.black, "FPS: {d}", .{rl.getFPS()});
 
     y += 40;
     const deltaTime: f32 = rl.getFrameTime();
-    debugText(&y, fontSize, "Delta time: {d:.5}", .{deltaTime});
-    debugText(&y, fontSize, "Player Position: ({d:.2}, {d:.2})", .{ player.position.x, player.position.y });
-    debugText(&y, fontSize, "Player isGrounded: {s}", .{if (player.isGrounded) "YES" else "NO"});
-    debugText(&y, fontSize, "Player jumpsRemaining: {d}", .{player.jumpsRemaining});
-    debugText(&y, fontSize, "Player dashCooldown: {d:.2}", .{player.dashCooldown});
-    debugText(&y, fontSize, "Platform count: {d}", .{level.platforms.len});
-    debugText(&y, fontSize, "Camera target position: ({d:.2}, {d:.2})", .{ camera.camera.target.x, camera.camera.target.y });
+    ui.drawText(10, y, fontSize, rl.Color.black, "Delta time: {d:.5}", .{deltaTime});
+    y += fontSize + 5;
+    ui.drawText(10, y, fontSize, rl.Color.black, "Player Position: ({d:.2}, {d:.2})", .{ player.position.x, player.position.y });
+    y += fontSize + 5;
+    ui.drawText(10, y, fontSize, rl.Color.black, "Player isGrounded: {s}", .{if (player.isGrounded) "YES" else "NO"});
+    y += fontSize + 5;
+    ui.drawText(10, y, fontSize, rl.Color.black, "Player jumpsRemaining: {d}", .{player.jumpsRemaining});
+    y += fontSize + 5;
+    ui.drawText(10, y, fontSize, rl.Color.black, "Player dashCooldown: {d:.2}", .{player.dashCooldown});
+    y += fontSize + 5;
+    ui.drawText(10, y, fontSize, rl.Color.black, "Platform count: {d}", .{level.platforms.len});
+    y += fontSize + 5;
+    ui.drawText(10, y, fontSize, rl.Color.black, "Camera target position: ({d:.2}, {d:.2})", .{ camera.camera.target.x, camera.camera.target.y });
 }
 
 pub fn main() anyerror!void {
@@ -81,9 +80,7 @@ pub fn main() anyerror!void {
             drawDebugHUD(&player, &level, &camera);
         }
 
-        var buf: [64]u8 = undefined;
-        const text = std.fmt.bufPrintZ(&buf, "Coins: {d}", .{player.coinsCollected}) catch "error";
-        rl.drawText(text, @intCast(screenWidth - 100), 10, 20, rl.Color.black);
+        ui.drawText(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coinsCollected});
         rl.endDrawing();
     }
 }

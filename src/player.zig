@@ -51,6 +51,7 @@ pub fn reset(player: *Player) void {
     player.dashCooldown = 0;
     player.isGrounded = false;
     player.coinsCollected = 0;
+    player.jumpsRemaining = 2;
 }
 
 pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, level: *level_mod.Level) void {
@@ -133,7 +134,7 @@ fn resolveCollisions(player: *Player, level: *level_mod.Level) void {
     }
 
     // Coins
-    for (level_mod.getCoins(level)) |*coin| {
+    for (&level.coins) |*coin| {
         if (!coin.isCollected and rl.checkCollisionCircleRec(coin.position, coin.radius, getHitbox(player))) {
             coin.isCollected = true;
             player.coinsCollected += 1;
