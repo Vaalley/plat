@@ -7,30 +7,6 @@ const level_mod = @import("level.zig");
 const camera_mod = @import("camera.zig");
 const ui = @import("ui.zig");
 
-fn drawDebugHUD(player: *player_mod.Player, level: *level_mod.Level, camera: *camera_mod.Camera) void {
-    const fontSize = 20;
-
-    var y: i32 = 10;
-    ui.drawText(10, y, fontSize, rl.Color.black, "Debug HUD", .{});
-    ui.drawText(10, y + fontSize, fontSize, rl.Color.black, "FPS: {d}", .{rl.getFPS()});
-
-    y += 40;
-    const deltaTime: f32 = rl.getFrameTime();
-    ui.drawText(10, y, fontSize, rl.Color.black, "Delta time: {d:.5}", .{deltaTime});
-    y += fontSize + 5;
-    ui.drawText(10, y, fontSize, rl.Color.black, "Player Position: ({d:.2}, {d:.2})", .{ player.position.x, player.position.y });
-    y += fontSize + 5;
-    ui.drawText(10, y, fontSize, rl.Color.black, "Player isGrounded: {s}", .{if (player.isGrounded) "YES" else "NO"});
-    y += fontSize + 5;
-    ui.drawText(10, y, fontSize, rl.Color.black, "Player jumpsRemaining: {d}", .{player.jumpsRemaining});
-    y += fontSize + 5;
-    ui.drawText(10, y, fontSize, rl.Color.black, "Player dashCooldown: {d:.2}", .{player.dashCooldown});
-    y += fontSize + 5;
-    ui.drawText(10, y, fontSize, rl.Color.black, "Platform count: {d}", .{level.platforms.len});
-    y += fontSize + 5;
-    ui.drawText(10, y, fontSize, rl.Color.black, "Camera target position: ({d:.2}, {d:.2})", .{ camera.camera.target.x, camera.camera.target.y });
-}
-
 pub fn main() anyerror!void {
     // Initialization phase - set up window and basic systems
     const screenWidth = 1280;
@@ -77,7 +53,7 @@ pub fn main() anyerror!void {
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
         if (input.show_debug) {
-            drawDebugHUD(&player, &level, &camera);
+            ui.drawDebugHUD(&player, &level, &camera);
         }
 
         ui.drawText(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coinsCollected});
