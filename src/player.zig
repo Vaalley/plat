@@ -1,8 +1,12 @@
 const rl = @import("raylib");
 
 const input_mod = @import("input.zig");
-
 const level_mod = @import("level.zig");
+
+const LANDING_TOLERANCE: f32 = 10.0;
+const DEATH_Y: f32 = 800.0; // below screen
+const DASH_LOCKOUT_DURATION: f32 = 0.2;
+const DASH_COOLDOWN: f32 = 1.0;
 
 pub const Player = struct {
     position: rl.Vector2,
@@ -87,7 +91,7 @@ pub fn getHitbox(player: *Player) rl.Rectangle {
 
 fn handleMovement(player: *Player, input: input_mod.InputState) void {
     // During dash, don't allow movement input (for the first 0.2 seconds) - A dash is 1 second long
-    if (player.dashCooldown > 0.8) return;
+    if (player.dashCooldown > DASH_LOCKOUT_DURATION) return;
 
     if (input.move_left and !input.move_right) {
         player.velocity.x = -player.moveSpeed;
@@ -107,8 +111,6 @@ fn handleJump(player: *Player, input: input_mod.InputState) void {
 }
 
 fn updatePosition(player: *Player, deltaTime: f32) void {
-    const DEATH_Y: f32 = 800.0; // below screen
-
     player.position.x += player.velocity.x * deltaTime;
     player.position.y += player.velocity.y * deltaTime;
 
@@ -118,11 +120,11 @@ fn updatePosition(player: *Player, deltaTime: f32) void {
 }
 
 fn resolveCollisions(player: *Player, level: *level_mod.Level) void {
-    const LANDING_TOLERANCE: f32 = 10.0;
     const feetY = player.position.y + player.hitboxHeight;
 
     // Platforms
-    for (level.platforms) |platform| {
+    for (0..level.platform_count) |index| {
+        const platform = level.platforms[index];
         const platformTop = platform.hitbox.y;
         const nearTop = feetY >= platformTop and feetY <= platformTop + LANDING_TOLERANCE;
 
@@ -134,7 +136,8 @@ fn resolveCollisions(player: *Player, level: *level_mod.Level) void {
     }
 
     // Coins
-    for (&level.coins) |*coin| {
+    for (0..level.coin_count) |index| {
+        const coin = &level.coins[index];
         if (!coin.isCollected and rl.checkCollisionCircleRec(coin.position, coin.radius, getHitbox(player))) {
             coin.isCollected = true;
             player.coinsCollected += 1;
@@ -153,6 +156,6 @@ fn handleDash(player: *Player, input: input_mod.InputState, deltaTime: f32) void
         // Dash in current facing direction
         const dashDirection: f32 = if (player.velocity.x >= 0) 1.0 else -1.0;
         player.velocity.x = dashDirection * player.dashPower;
-        player.dashCooldown = 1.0; // 1 second until next dash
+        player.dashCooldown = DASH_COOLDOWN;
     }
 }
