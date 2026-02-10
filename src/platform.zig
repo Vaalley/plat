@@ -5,7 +5,6 @@ pub const Platform = struct {
     position: rl.Vector2,
     size: rl.Vector2,
     color: rl.Color,
-    hitbox: rl.Rectangle,
 };
 
 pub fn init(position: rl.Vector2, size: rl.Vector2, color: rl.Color) Platform {
@@ -13,10 +12,18 @@ pub fn init(position: rl.Vector2, size: rl.Vector2, color: rl.Color) Platform {
         .position = position,
         .size = size,
         .color = color,
-        .hitbox = .{ .x = position.x, .y = position.y, .width = size.x, .height = size.y },
     };
 }
 
 pub fn draw(platform: *const Platform) void {
     rl.drawRectangle(@intFromFloat(platform.position.x), @intFromFloat(platform.position.y), @intFromFloat(platform.size.x), @intFromFloat(platform.size.y), platform.color);
+}
+
+pub fn getHitbox(platform: *const Platform) rl.Rectangle {
+    return .{
+        .x = platform.position.x,
+        .y = platform.position.y,
+        .width = platform.size.x,
+        .height = platform.size.y,
+    };
 }

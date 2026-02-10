@@ -2,6 +2,7 @@ const rl = @import("raylib");
 
 const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
+const platform_mod = @import("platform.zig");
 
 const LANDING_TOLERANCE: f32 = 10.0;
 const DEATH_Y: f32 = 800.0; // below screen
@@ -125,12 +126,13 @@ fn resolveCollisions(player: *Player, level: *level_mod.Level) void {
     // Platforms
     for (0..level.platform_count) |index| {
         const platform = level.platforms[index];
-        const platformTop = platform.hitbox.y;
+        const platformHitbox = platform_mod.getHitbox(&platform);
+        const platformTop = platformHitbox.y;
         const nearTop = feetY >= platformTop and feetY <= platformTop + LANDING_TOLERANCE;
 
-        if (rl.checkCollisionRecs(getHitbox(player), platform.hitbox) and player.velocity.y >= 0 and nearTop) {
+        if (rl.checkCollisionRecs(getHitbox(player), platformHitbox) and player.velocity.y >= 0 and nearTop) {
             player.isGrounded = true;
-            player.position.y = platform.hitbox.y - player.hitboxHeight;
+            player.position.y = platformHitbox.y - player.hitboxHeight;
             player.velocity.y = 0;
         }
     }
