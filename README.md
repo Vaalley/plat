@@ -19,6 +19,9 @@ Check `src/input.zig` for input handling.
 - `src/level.zig` - Level/world management
 - `src/input.zig` - Input handling
 - `src/platform.zig` - Platform/collision utilities
+- `src/coin.zig` - Coin collection logic
+- `src/camera.zig` - Camera management
+- `src/ui.zig` - User interface elements
 
 ## Dependencies
 
