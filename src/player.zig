@@ -14,20 +14,20 @@ pub const Player = struct {
     acceleration: rl.Vector2,
 
     // Movement parameters
-    moveSpeed: f32,
+    move_speed: f32,
     gravity: f32,
-    jumpPower: f32,
-    jumpsRemaining: u32,
-    dashCooldown: f32,
-    dashPower: f32,
+    jump_power: f32,
+    jumps_remaining: u32,
+    dash_cooldown: f32,
+    dash_power: f32,
 
     // Collision
-    hitboxWidth: f32,
-    hitboxHeight: f32,
-    isGrounded: bool,
+    hitbox_width: f32,
+    hitbox_height: f32,
+    is_grounded: bool,
 
     // Collectibles
-    coinsCollected: u32,
+    coins_collected: u32,
 };
 
 pub fn init() Player {
@@ -35,16 +35,16 @@ pub fn init() Player {
         .position = .{ .x = 100, .y = 100 },
         .velocity = .{ .x = 0, .y = 0 },
         .acceleration = .{ .x = 0, .y = 0 },
-        .moveSpeed = 200,
-        .jumpPower = 550,
+        .move_speed = 200,
+        .jump_power = 550,
         .gravity = 1500,
-        .dashPower = 800,
-        .dashCooldown = 0,
-        .jumpsRemaining = 2,
-        .hitboxWidth = 32,
-        .hitboxHeight = 64,
-        .isGrounded = false,
-        .coinsCollected = 0,
+        .dash_power = 800,
+        .dash_cooldown = 0,
+        .jumps_remaining = 2,
+        .hitbox_width = 32,
+        .hitbox_height = 64,
+        .is_grounded = false,
+        .coins_collected = 0,
     };
 }
 
@@ -52,10 +52,10 @@ pub fn reset(player: *Player) void {
     player.position = .{ .x = 100, .y = 100 };
     player.velocity = .{ .x = 0, .y = 0 };
     player.acceleration = .{ .x = 0, .y = 0 };
-    player.dashCooldown = 0;
-    player.isGrounded = false;
-    player.coinsCollected = 0;
-    player.jumpsRemaining = 2;
+    player.dash_cooldown = 0;
+    player.is_grounded = false;
+    player.coins_collected = 0;
+    player.jumps_remaining = 2;
 }
 
 pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState) void {
@@ -64,7 +64,7 @@ pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState) void
     handleDash(player, input, deltaTime);
 
     // Reset grounded state before collision resolution
-    player.isGrounded = false;
+    player.is_grounded = false;
 
     // Gravity
     player.velocity.y += player.gravity * deltaTime;
@@ -73,36 +73,36 @@ pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState) void
 }
 
 pub fn draw(player: *Player) void {
-    rl.drawRectangleV(player.position, .{ .x = player.hitboxWidth, .y = player.hitboxHeight }, rl.Color.orange);
+    rl.drawRectangleV(player.position, .{ .x = player.hitbox_width, .y = player.hitbox_height }, rl.Color.orange);
 }
 
-pub fn getHitbox(player: *Player) rl.Rectangle {
+pub fn get_hitbox(player: *Player) rl.Rectangle {
     return .{
         .x = player.position.x,
         .y = player.position.y,
-        .width = player.hitboxWidth,
-        .height = player.hitboxHeight,
+        .width = player.hitbox_width,
+        .height = player.hitbox_height,
     };
 }
 
 fn handleMovement(player: *Player, input: input_mod.InputState) void {
     // During dash, don't allow movement input (for the first 0.2 seconds) - A dash is 1 second long
-    if (player.dashCooldown > DASH_COOLDOWN - DASH_LOCKOUT_DURATION) return;
+    if (player.dash_cooldown > DASH_COOLDOWN - DASH_LOCKOUT_DURATION) return;
 
     if (input.move_left and !input.move_right) {
-        player.velocity.x = -player.moveSpeed;
+        player.velocity.x = -player.move_speed;
     } else if (input.move_right and !input.move_left) {
-        player.velocity.x = player.moveSpeed;
+        player.velocity.x = player.move_speed;
     } else {
         player.velocity.x = 0;
     }
 }
 
 fn handleJump(player: *Player, input: input_mod.InputState) void {
-    if (input.jump and (player.isGrounded or player.jumpsRemaining > 0)) {
-        player.velocity.y = -player.jumpPower;
-        player.isGrounded = false;
-        player.jumpsRemaining -= 1;
+    if (input.jump and (player.is_grounded or player.jumps_remaining > 0)) {
+        player.velocity.y = -player.jump_power;
+        player.is_grounded = false;
+        player.jumps_remaining -= 1;
     }
 }
 
@@ -117,15 +117,15 @@ fn updatePosition(player: *Player, deltaTime: f32) void {
 
 fn handleDash(player: *Player, input: input_mod.InputState, deltaTime: f32) void {
     // Decrease cooldown
-    if (player.dashCooldown > 0) {
-        player.dashCooldown -= deltaTime;
+    if (player.dash_cooldown > 0) {
+        player.dash_cooldown -= deltaTime;
     }
 
     // Start dash
-    if (input.dash and player.dashCooldown <= 0) {
+    if (input.dash and player.dash_cooldown <= 0) {
         // Dash in current facing direction
         const dashDirection: f32 = if (player.velocity.x >= 0) 1.0 else -1.0;
-        player.velocity.x = dashDirection * player.dashPower;
-        player.dashCooldown = DASH_COOLDOWN;
+        player.velocity.x = dashDirection * player.dash_power;
+        player.dash_cooldown = DASH_COOLDOWN;
     }
 }

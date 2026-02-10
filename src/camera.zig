@@ -5,11 +5,11 @@ pub const Camera = struct {
     camera: rl.Camera2D,
 };
 
-pub fn init(screenWidth: f32, screenHeight: f32) Camera {
+pub fn init(screen_width: f32, screen_height: f32) Camera {
     return .{
         .camera = .{
             .target = .{ .x = 0, .y = 0 },
-            .offset = .{ .x = screenWidth / 2, .y = screenHeight / 2 },
+            .offset = .{ .x = screen_width / 2, .y = screen_height / 2 },
             .rotation = 0,
             .zoom = 1,
         },

@@ -12,13 +12,13 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
     // Platforms
     for (0..level.platform_count) |index| {
         const platform = level.platforms[index];
-        const platformHitbox = platform_mod.getHitbox(&platform);
-        const platformTop = platformHitbox.y;
-        const nearTop = feetY >= platformTop and feetY <= platformTop + LANDING_TOLERANCE;
+        const platform_hitbox = platform_mod.get_hitbox(&platform);
+        const platform_top = platform_hitbox.y;
+        const near_top = feetY >= platform_top and feetY <= platform_top + LANDING_TOLERANCE;
 
-        if (rl.checkCollisionRecs(player_mod.getHitbox(player), platformHitbox) and player.velocity.y >= 0 and nearTop) {
-            player.isGrounded = true;
-            player.position.y = platformHitbox.y - player.hitboxHeight;
+        if (rl.checkCollisionRecs(player_mod.get_hitbox(player), platform_hitbox) and player.velocity.y >= 0 and near_top) {
+            player.is_grounded = true;
+            player.position.y = platform_hitbox.y - player.hitbox_height;
             player.velocity.y = 0;
         }
     }
@@ -26,14 +26,14 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
     // Coins
     for (0..level.coin_count) |index| {
         const coin = &level.coins[index];
-        if (!coin.isCollected and rl.checkCollisionCircleRec(coin.position, coin.radius, player_mod.getHitbox(player))) {
-            coin.isCollected = true;
-            player.coinsCollected += 1;
+        if (!coin.is_collected and rl.checkCollisionCircleRec(coin.position, coin.radius, player_mod.get_hitbox(player))) {
+            coin.is_collected = true;
+            player.coins_collected += 1;
         }
     }
 
-    if (player.isGrounded) {
-        player.jumpsRemaining = 2;
+    if (player.is_grounded) {
+        player.jumps_remaining = 2;
     }
 }
 
