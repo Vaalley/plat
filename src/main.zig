@@ -54,10 +54,10 @@ pub fn main() anyerror!void {
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
         if (input.show_debug) {
-            ui_mod.drawDebugHUD(&player, &level, &camera);
+            ui_mod.draw_debug_hud(&player, &level, &camera);
         }
 
-        ui_mod.drawText(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coinsCollected});
+        ui_mod.draw_text(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
         rl.endDrawing();
     }
 }

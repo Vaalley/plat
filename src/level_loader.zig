@@ -1,3 +1,5 @@
+const std = @import("std");
+
 const ColorData = struct {
     r: u8,
     g: u8,
@@ -22,9 +24,22 @@ const CoinData = struct {
     position_y: f32,
 };
 
-const LevelData = struct {
+pub const LevelData = struct {
     name: []const u8,
     player_spawn_point: PlayerSpawnPoint,
     platforms: []PlatformData,
     coins: []CoinData,
 };
+
+/// Loads level data from a JSON file using std.json
+pub fn load_level_data_from_file(allocator: std.mem.Allocator, file_path: []const u8) !LevelData {
+    const file = try std.fs.openFileAbsolute(file_path, .{});
+    defer file.close();
+
+    const content = try file.readToEndAlloc(allocator, 1024 * 1024);
+
+    const parsed = try std.json.parseFromSlice(LevelData, allocator, content, .{});
+    defer parsed.deinit();
+
+    return parsed.value;
+}

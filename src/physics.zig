@@ -7,7 +7,7 @@ const platform_mod = @import("platform.zig");
 const LANDING_TOLERANCE: f32 = 10.0;
 
 pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
-    const feetY = player.position.y + player.hitboxHeight;
+    const feetY = player.position.y + player.hitbox_height;
 
     // Platforms
     for (0..level.platform_count) |index| {
