@@ -10,7 +10,12 @@ zig build run
 
 ## Controls
 
-Check `src/input.zig` for input handling.
+- **A** / **D** or **←** / **→** - Move left/right
+- **Space** - Jump (double jump available)
+- **Shift** - Dash
+- **F1** - Toggle debug HUD
+
+You may also check `src/input.zig` for the input configuration.
 
 ## Structure
 
@@ -22,6 +27,7 @@ Check `src/input.zig` for input handling.
 - `src/coin.zig` - Coin collection logic
 - `src/camera.zig` - Camera management
 - `src/ui.zig` - User interface elements
+- `src/physics.zig` - Physics and collision resolution
 
 ## Dependencies
 

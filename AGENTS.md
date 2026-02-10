@@ -22,6 +22,9 @@ A simple 2D platformer built with Zig and Raylib.
 | `level.zig`    | Collection of platforms                   |
 | `platform.zig` | Static platform definitions               |
 | `camera.zig`   | 2D camera following player                |
+| `coin.zig`     | Collectible coins                         |
+| `ui.zig`       | UI drawing and debug HUD                  |
+| `physics.zig`  | Collision resolution                      |
 
 ### Key Patterns
 
@@ -38,7 +41,10 @@ A simple 2D platformer built with Zig and Raylib.
 - ✅ Platform collision
 - ✅ Death/respawn
 - ✅ Camera following player
-- ✅ Basic level with 2 platforms
+- ✅ Double jump
+- ✅ Coins to collect
+- ✅ Debug HUD (F1 toggle)
+- ✅ Basic debug level with a couple platforms and coins
 
 ## Code Style
 
@@ -46,25 +52,3 @@ A simple 2D platformer built with Zig and Raylib.
 - No premature optimization (measure first)
 - Functions extracted when update() gets too long
 - Magic numbers extracted as named constants
-
-## Quick Reference
-
-```zig
-// Key imports
-const rl = @import("raylib");
-
-// Player state
-player.position     // rl.Vector2
-player.velocity     // rl.Vector2  
-player.isGrounded   // bool
-player.dashCooldown // f32
-
-// Drawing with camera
-rl.beginDrawing();
-rl.clearBackground(.white);
-rl.beginMode2D(camera.camera);
-// draw world stuff here
-rl.endMode2D();
-// draw UI here
-rl.endDrawing();
-```
