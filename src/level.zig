@@ -11,14 +11,19 @@ pub const Level = struct {
 
 pub fn init() Level {
     var level: Level = undefined;
-    level.platform_count = 2;
-    level.coin_count = 2;
+    level.platform_count = 4;
+    level.coin_count = 6;
 
     level.platforms[0] = platform_mod.init(rl.Vector2{ .x = 100, .y = 650 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green);
     level.platforms[1] = platform_mod.init(rl.Vector2{ .x = 350, .y = 580 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green);
+    level.platforms[2] = platform_mod.init(rl.Vector2{ .x = 600, .y = 510 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green);
+    level.platforms[3] = platform_mod.init(rl.Vector2{ .x = 850, .y = 550 }, rl.Vector2{ .x = 200, .y = 32 }, rl.Color.green);
 
     level.coins[0] = coin_mod.init(200, 600);
     level.coins[1] = coin_mod.init(400, 530);
+    level.coins[2] = coin_mod.init(650, 460);
+    level.coins[3] = coin_mod.init(900, 440);
+    level.coins[4] = coin_mod.init(1000, 440);
 
     return level;
 }
