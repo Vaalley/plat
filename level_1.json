@@ -1,0 +1,26 @@
+{
+    "name": "Level 1",
+    "player_spawn_point": {
+        "position_x": 50,
+        "position_y": 400
+    },
+    "platforms": [
+        {
+            "position_x": 100,
+            "position_y": 500,
+            "width": 800,
+            "height": 20,
+            "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+            }
+        }
+    ],
+    "coins": [
+        {
+            "position_x": 200,
+            "position_y": 450
+        }
+    ]
+}
