@@ -5,7 +5,8 @@ const player_mod = @import("player.zig");
 const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
 const camera_mod = @import("camera.zig");
-const ui = @import("ui.zig");
+const physics_mod = @import("physics.zig");
+const ui_mod = @import("ui.zig");
 
 pub fn main() anyerror!void {
     // Initialization phase - set up window and basic systems
@@ -34,10 +35,10 @@ pub fn main() anyerror!void {
         input_mod.update(&input);
 
         // Update phase - process game logic
-        player_mod.update(&player, deltaTime, input, &level);
+        player_mod.update(&player, deltaTime, input);
 
         // Physics phase - resolve movement and collisions
-        // ResolveCollisions();
+        physics_mod.resolvePlayerCollisions(&player, &level);
 
         // Camera phase - update camera position
         camera_mod.update(&camera, &player);
@@ -53,10 +54,10 @@ pub fn main() anyerror!void {
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
         if (input.show_debug) {
-            ui.drawDebugHUD(&player, &level, &camera);
+            ui_mod.drawDebugHUD(&player, &level, &camera);
         }
 
-        ui.drawText(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coinsCollected});
+        ui_mod.drawText(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coinsCollected});
         rl.endDrawing();
     }
 }

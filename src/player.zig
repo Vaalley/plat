@@ -4,7 +4,6 @@ const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
 const platform_mod = @import("platform.zig");
 
-const LANDING_TOLERANCE: f32 = 10.0;
 const DEATH_Y: f32 = 800.0; // below screen
 const DASH_LOCKOUT_DURATION: f32 = 0.2;
 const DASH_COOLDOWN: f32 = 1.0;
@@ -59,7 +58,7 @@ pub fn reset(player: *Player) void {
     player.jumpsRemaining = 2;
 }
 
-pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, level: *level_mod.Level) void {
+pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState) void {
     handleMovement(player, input);
     handleJump(player, input);
     handleDash(player, input, deltaTime);
@@ -71,10 +70,6 @@ pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState, leve
     player.velocity.y += player.gravity * deltaTime;
 
     updatePosition(player, deltaTime);
-    resolveCollisions(player, level);
-    if (player.isGrounded) {
-        player.jumpsRemaining = 2;
-    }
 }
 
 pub fn draw(player: *Player) void {
@@ -117,33 +112,6 @@ fn updatePosition(player: *Player, deltaTime: f32) void {
 
     if (player.position.y > DEATH_Y) {
         reset(player);
-    }
-}
-
-fn resolveCollisions(player: *Player, level: *level_mod.Level) void {
-    const feetY = player.position.y + player.hitboxHeight;
-
-    // Platforms
-    for (0..level.platform_count) |index| {
-        const platform = level.platforms[index];
-        const platformHitbox = platform_mod.getHitbox(&platform);
-        const platformTop = platformHitbox.y;
-        const nearTop = feetY >= platformTop and feetY <= platformTop + LANDING_TOLERANCE;
-
-        if (rl.checkCollisionRecs(getHitbox(player), platformHitbox) and player.velocity.y >= 0 and nearTop) {
-            player.isGrounded = true;
-            player.position.y = platformHitbox.y - player.hitboxHeight;
-            player.velocity.y = 0;
-        }
-    }
-
-    // Coins
-    for (0..level.coin_count) |index| {
-        const coin = &level.coins[index];
-        if (!coin.isCollected and rl.checkCollisionCircleRec(coin.position, coin.radius, getHitbox(player))) {
-            coin.isCollected = true;
-            player.coinsCollected += 1;
-        }
     }
 }
 
