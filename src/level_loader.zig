@@ -36,6 +36,8 @@ pub fn load_level_data_from_file(allocator: std.mem.Allocator, file_path: []cons
     const file = try std.fs.cwd().openFile(file_path, .{});
     defer file.close();
 
+    // TODO: readToEndAlloc is deprecated, use reader in the future instead (I am too stupid to figure it out now, and this works)
+    // Additionally, 1024 * 1024 is a magic number (maybe fix this in the future?)
     const content = try file.readToEndAlloc(allocator, 1024 * 1024);
 
     const parsed = try std.json.parseFromSlice(LevelData, allocator, content, .{});

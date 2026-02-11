@@ -14,7 +14,7 @@ pub fn main() anyerror!void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit(); // Frees EVERYTHING at once
 
-    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "level_1.json");
+    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
     std.debug.print("Level name: {s}\n", .{level_data.name});
     std.debug.print("Player spawn point: {d}, {d}\n", .{ level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y });
     std.debug.print("Number of platforms: {d}\n", .{level_data.platforms.len});
