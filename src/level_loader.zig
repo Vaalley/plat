@@ -33,7 +33,7 @@ pub const LevelData = struct {
 
 /// Loads level data from a JSON file using std.json
 pub fn load_level_data_from_file(allocator: std.mem.Allocator, file_path: []const u8) !LevelData {
-    const file = try std.fs.openFileAbsolute(file_path, .{});
+    const file = try std.fs.cwd().openFile(file_path, .{});
     defer file.close();
 
     const content = try file.readToEndAlloc(allocator, 1024 * 1024);

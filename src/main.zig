@@ -7,8 +7,20 @@ const level_mod = @import("level.zig");
 const camera_mod = @import("camera.zig");
 const physics_mod = @import("physics.zig");
 const ui_mod = @import("ui.zig");
+const level_loader_mod = @import("level_loader.zig");
 
 pub fn main() anyerror!void {
+    // this is just to test the level loader, it will be removed later
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit(); // Frees EVERYTHING at once
+
+    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "level_1.json");
+    std.debug.print("Level name: {s}\n", .{level_data.name});
+    std.debug.print("Player spawn point: {d}, {d}\n", .{ level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y });
+    std.debug.print("Number of platforms: {d}\n", .{level_data.platforms.len});
+    std.debug.print("Number of coins: {d}\n", .{level_data.coins.len});
+    // this is just to test the level loader, it will be removed later
+
     // Initialization phase - set up window and basic systems
     const screenWidth = 1280;
     const screenHeight = 720;
