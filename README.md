@@ -28,6 +28,7 @@ You may also check `src/input.zig` for the input configuration.
 - `src/camera.zig` - Camera management
 - `src/ui.zig` - User interface elements
 - `src/physics.zig` - Physics and collision resolution
+- `src/level_loader.zig` - Level loading from JSON files
 
 ## Dependencies
 
