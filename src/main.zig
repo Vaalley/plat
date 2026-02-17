@@ -14,11 +14,11 @@ pub fn main() anyerror!void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit(); // Frees EVERYTHING at once
 
-    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
-    std.debug.print("Level name: {s}\n", .{level_data.name});
-    std.debug.print("Player spawn point: {d}, {d}\n", .{ level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y });
-    std.debug.print("Number of platforms: {d}\n", .{level_data.platforms.len});
-    std.debug.print("Number of coins: {d}\n", .{level_data.coins.len});
+    // const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
+    // std.debug.print("Level name: {s}\n", .{level_data.name});
+    // std.debug.print("Player spawn point: {d}, {d}\n", .{ level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y });
+    // std.debug.print("Number of platforms: {d}\n", .{level_data.platforms.len});
+    // std.debug.print("Number of coins: {d}\n", .{level_data.coins.len});
     // this is just to test the level loader, it will be removed later
 
     // Initialization phase - set up window and basic systems
@@ -36,7 +36,8 @@ pub fn main() anyerror!void {
     // Initialize game objects
     var player: player_mod.Player = player_mod.init();
     var input = input_mod.init();
-    var level: level_mod.Level = level_mod.init();
+    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
+    var level = level_loader_mod.load_level(level_data);
     var camera: camera_mod.Camera = camera_mod.init(screenWidth, screenHeight);
 
     // Main game loop
