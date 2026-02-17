@@ -1,3 +1,4 @@
+//! Collision resolution between player and level objects.
 const rl = @import("raylib");
 
 const player_mod = @import("player.zig");

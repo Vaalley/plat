@@ -1,4 +1,6 @@
+//! Keyboard input gathering and state management.
 const std = @import("std");
+
 const rl = @import("raylib");
 
 pub const InputState = struct {

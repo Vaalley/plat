@@ -1,3 +1,4 @@
+//! Collectible coin entities.
 const rl = @import("raylib");
 
 pub const Coin = struct {

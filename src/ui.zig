@@ -1,10 +1,12 @@
+//! UI rendering and debug HUD display.
+const std = @import("std");
+
 const rl = @import("raylib");
 const rg = @import("raygui");
 
 const player_mod = @import("player.zig");
 const level_mod = @import("level.zig");
 const camera_mod = @import("camera.zig");
-const std = @import("std");
 
 const DEBUG_PANEL_X: f32 = 10;
 const DEBUG_PANEL_Y: f32 = 10;

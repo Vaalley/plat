@@ -1,4 +1,6 @@
+//! Static platform definitions and hitbox utilities.
 const std = @import("std");
+
 const rl = @import("raylib");
 
 pub const Platform = struct {

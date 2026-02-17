@@ -1,5 +1,7 @@
-const rl = @import("raylib");
+//! Main entry point and game loop orchestration.
 const std = @import("std");
+
+const rl = @import("raylib");
 
 const player_mod = @import("player.zig");
 const input_mod = @import("input.zig");

@@ -1,4 +1,6 @@
+//! 2D camera that follows the player.
 const rl = @import("raylib");
+
 const player_mod = @import("player.zig");
 
 pub const Camera = struct {

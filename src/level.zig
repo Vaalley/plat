@@ -1,4 +1,6 @@
+//! Container for all level objects (platforms and coins).
 const rl = @import("raylib");
+
 const platform_mod = @import("platform.zig");
 const coin_mod = @import("coin.zig");
 

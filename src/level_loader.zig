@@ -1,5 +1,8 @@
+//! JSON level loading and data parsing.
 const std = @import("std");
+
 const rl = @import("raylib");
+
 const level_mod = @import("level.zig");
 const platform_mod = @import("platform.zig");
 const coin_mod = @import("coin.zig");

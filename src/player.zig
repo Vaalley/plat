@@ -1,3 +1,4 @@
+//! Player movement, physics state, and abilities (jump, dash).
 const rl = @import("raylib");
 
 const input_mod = @import("input.zig");
