@@ -3,6 +3,7 @@ const platform_mod = @import("platform.zig");
 const coin_mod = @import("coin.zig");
 
 pub const Level = struct {
+    // Maximum capacity for platforms and coins is 100 because I decided so (arbitrary limit for simplicity)
     platforms: [100]platform_mod.Platform,
     platform_count: usize,
     coins: [100]coin_mod.Coin,
