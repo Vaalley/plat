@@ -10,6 +10,7 @@ const DASH_COOLDOWN: f32 = 1.0;
 
 pub const Player = struct {
     position: rl.Vector2,
+    spawn_position: rl.Vector2,
     velocity: rl.Vector2,
     acceleration: rl.Vector2,
 
@@ -30,9 +31,10 @@ pub const Player = struct {
     coins_collected: u32,
 };
 
-pub fn init() Player {
+pub fn init(spawn_x: f32, spawn_y: f32) Player {
     return .{
-        .position = .{ .x = 100, .y = 100 },
+        .position = .{ .x = spawn_x, .y = spawn_y },
+        .spawn_position = .{ .x = spawn_x, .y = spawn_y },
         .velocity = .{ .x = 0, .y = 0 },
         .acceleration = .{ .x = 0, .y = 0 },
         .move_speed = 200,
@@ -49,7 +51,7 @@ pub fn init() Player {
 }
 
 pub fn reset(player: *Player) void {
-    player.position = .{ .x = 100, .y = 100 };
+    player.position = player.spawn_position;
     player.velocity = .{ .x = 0, .y = 0 };
     player.acceleration = .{ .x = 0, .y = 0 };
     player.dash_cooldown = 0;

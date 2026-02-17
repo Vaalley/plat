@@ -34,9 +34,9 @@ pub fn main() anyerror!void {
     // rl.setTargetFPS(60);
 
     // Initialize game objects
-    var player: player_mod.Player = player_mod.init();
-    var input = input_mod.init();
     const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
+    var player: player_mod.Player = player_mod.init(level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y);
+    var input = input_mod.init();
     var level = level_loader_mod.load_level(level_data);
     var camera: camera_mod.Camera = camera_mod.init(screenWidth, screenHeight);
 

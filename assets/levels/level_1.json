@@ -2,11 +2,11 @@
     "name": "Level 1",
     "player_spawn_point": {
         "position_x": 50,
-        "position_y": 400
+        "position_y": 436
     },
     "platforms": [
         {
-            "position_x": 100,
+            "position_x": 0,
             "position_y": 500,
             "width": 500,
             "height": 20,
