@@ -14,6 +14,7 @@ pub const InputState = struct {
 
     // Debug
     show_debug: bool,
+    reload_level: bool,
 };
 
 pub fn init() InputState {
@@ -23,6 +24,7 @@ pub fn init() InputState {
         .jump = false,
         .dash = false,
         .show_debug = false,
+        .reload_level = false,
     };
 }
 
@@ -39,4 +41,5 @@ pub fn update(input: *InputState) void {
     if (rl.isKeyPressed(.f1)) {
         input.show_debug = !input.show_debug;
     }
+    input.reload_level = rl.isKeyPressed(.f5);
 }

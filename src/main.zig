@@ -58,6 +58,10 @@ pub fn main() anyerror!void {
         player_mod.draw(&player);
         level_mod.draw(&level);
 
+        if (input.reload_level) {
+            try level_loader_mod.reloadLevel(&arena, &level, &player);
+        }
+
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
         if (input.show_debug) {

@@ -6,6 +6,7 @@ const rl = @import("raylib");
 const level_mod = @import("level.zig");
 const collider_mod = @import("collider.zig");
 const coin_mod = @import("coin.zig");
+const player_mod = @import("player.zig");
 
 const ColorData = struct {
     r: u8,
@@ -73,4 +74,12 @@ pub fn load_level(level_data: LevelData) level_mod.Level {
     }
 
     return level;
+}
+
+pub fn reloadLevel(arena: *std.heap.ArenaAllocator, level: *level_mod.Level, player: *player_mod.Player) !void {
+    _ = arena.reset(.retain_capacity); // Free all, keep memory
+    const level_data = try load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
+    level.* = load_level(level_data);
+    player.spawn_position = .{ .x = level_data.player_spawn_point.position_x, .y = level_data.player_spawn_point.position_y };
+    player_mod.reset(player);
 }
