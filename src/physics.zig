@@ -3,24 +3,56 @@ const rl = @import("raylib");
 
 const player_mod = @import("player.zig");
 const level_mod = @import("level.zig");
-const platform_mod = @import("platform.zig");
+const collider_mod = @import("collider.zig");
 
 const LANDING_TOLERANCE: f32 = 10.0;
 
 pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
     const feetY = player.position.y + player.hitbox_height;
 
-    // Platforms
-    for (0..level.platform_count) |index| {
-        const platform = level.platforms[index];
-        const platform_hitbox = platform_mod.get_hitbox(&platform);
-        const platform_top = platform_hitbox.y;
-        const near_top = feetY >= platform_top and feetY <= platform_top + LANDING_TOLERANCE;
+    // Colliders
+    for (0..level.collider_count) |index| {
+        const collider = level.colliders[index];
+        const collider_hitbox = collider_mod.get_hitbox(&collider);
+        const collider_top = collider_hitbox.y;
+        const near_top = feetY >= collider_top and feetY <= collider_top + LANDING_TOLERANCE;
 
-        if (rl.checkCollisionRecs(player_mod.get_hitbox(player), platform_hitbox) and player.velocity.y >= 0 and near_top) {
+        // Handle collisions for OneWay colliders
+        if (collider.collider_type == .OneWay and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox) and player.velocity.y >= 0 and near_top) {
             player.is_grounded = true;
-            player.position.y = platform_hitbox.y - player.hitbox_height;
+            player.position.y = collider_hitbox.y - player.hitbox_height;
             player.velocity.y = 0;
+        }
+
+        // Handle collisions for Solid colliders
+        if (collider.collider_type == .Solid and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox)) {
+            // Calculate overlap on each axis to find smallest penetration
+            const overlap_top = (player.position.y + player.hitbox_height) - collider_hitbox.y; // how far into collider from top
+            const overlap_bottom = (collider_hitbox.y + collider_hitbox.height) - player.position.y; // how far into collider from bottom
+            const overlap_left = (player.position.x + player.hitbox_width) - collider_hitbox.x;
+            const overlap_right = (collider_hitbox.x + collider_hitbox.width) - player.position.x;
+
+            // Find smallest overlap to determine collision side
+            const min_overlap = @min(@min(overlap_top, overlap_bottom), @min(overlap_left, overlap_right));
+
+            if (min_overlap == overlap_top and player.velocity.y > 0) {
+                // Landing on top
+                player.is_grounded = true;
+                player.position.y = collider_hitbox.y - player.hitbox_height;
+                player.velocity.y = 0;
+            } else if (min_overlap == overlap_bottom and player.velocity.y < 0) {
+                // Hitting head on bottom
+                player.position.y = collider_hitbox.y + collider_hitbox.height;
+                player.velocity.y = 0;
+            } else if (min_overlap == overlap_left and player.velocity.x > 0) {
+                // Hitting left wall
+                player.position.x = collider_hitbox.x - player.hitbox_width;
+                player.velocity.x = 0;
+            } else if (min_overlap == overlap_right and player.velocity.x < 0) {
+                // Hitting right wall
+                player.position.x = collider_hitbox.x + collider_hitbox.width;
+                player.velocity.x = 0;
+            }
         }
     }
 

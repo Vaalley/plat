@@ -3,7 +3,6 @@ const rl = @import("raylib");
 
 const input_mod = @import("input.zig");
 const level_mod = @import("level.zig");
-const platform_mod = @import("platform.zig");
 
 const DEATH_Y: f32 = 800.0; // below screen
 const DASH_LOCKOUT_DURATION: f32 = 0.2;
