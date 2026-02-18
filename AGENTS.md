@@ -19,8 +19,8 @@ A simple 2D platformer built with Zig and Raylib.
 | `main.zig`     | Game loop, initialization, orchestration  |
 | `player.zig`   | Player movement, physics, collision, dash |
 | `input.zig`    | Input gathering (keyboard → game actions) |
-| `level.zig`    | Collection of platforms                   |
-| `platform.zig` | Static platform definitions               |
+| `level.zig`    | Collection of colliders and coins         |
+| `collider.zig` | Collider types (OneWay, Solid)            |
 | `camera.zig`   | 2D camera following player                |
 | `coin.zig`     | Collectible coins                         |
 | `ui.zig`       | UI drawing and debug HUD                  |
@@ -43,8 +43,10 @@ A simple 2D platformer built with Zig and Raylib.
 - ✅ Camera following player
 - ✅ Double jump
 - ✅ Coins to collect
+- ✅ Two collider types: OneWay (pass-through) and Solid (full block)
+- ✅ JSON level loading
+- ✅ Hot level reload (F5)
 - ✅ Debug HUD (F1 toggle)
-- ✅ Basic debug level with a couple platforms and coins
 
 ## Code Style
 
