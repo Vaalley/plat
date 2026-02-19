@@ -43,6 +43,9 @@ pub fn main() anyerror!void {
 
         // Update phase - process game logic
         player_mod.update(&player, deltaTime, input);
+        if (input.reload_level) {
+            try level_loader_mod.reloadLevel(&arena, &level, &player);
+        }
 
         // Physics phase - resolve movement and collisions
         physics_mod.resolvePlayerCollisions(&player, &level);
@@ -58,15 +61,9 @@ pub fn main() anyerror!void {
         player_mod.draw(&player);
         level_mod.draw(&level);
 
-        if (input.reload_level) {
-            try level_loader_mod.reloadLevel(&arena, &level, &player);
-        }
-
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
-        if (input.show_debug) {
-            ui_mod.draw_debug_hud(&player, &level, &camera);
-        }
+        ui_mod.draw_debug_hud(&player, &level, &camera, input.show_debug);
 
         ui_mod.draw_text(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
         rl.endDrawing();

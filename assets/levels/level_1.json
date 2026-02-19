@@ -17,6 +17,18 @@
                 "b": 0
             }
         },
+         {
+            "collider_type": "Solid",
+            "position_x": 0,
+            "position_y": 200,
+            "width": 50,
+            "height": 300,
+            "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+            }
+        },
         {
             "collider_type": "OneWay",
             "position_x": 700,

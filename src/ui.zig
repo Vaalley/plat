@@ -22,7 +22,9 @@ pub fn draw_text(x: i32, y: i32, font_size: i32, color: rl.Color, comptime fmt: 
     rl.drawText(text, x, y, font_size, color);
 }
 
-pub fn draw_debug_hud(player: *player_mod.Player, level: *level_mod.Level, camera: *camera_mod.Camera) void {
+pub fn draw_debug_hud(player: *player_mod.Player, level: *level_mod.Level, camera: *camera_mod.Camera, show_debug: bool) void {
+    if (!show_debug) return;
+
     _ = rg.panel(rl.Rectangle{
         .x = DEBUG_PANEL_X,
         .y = DEBUG_PANEL_Y,
