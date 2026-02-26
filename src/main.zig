@@ -43,6 +43,7 @@ pub fn main() anyerror!void {
 
         // Update phase - process game logic
         player_mod.update(&player, deltaTime, input);
+        level_mod.update(&level, deltaTime);
         if (input.reload_level) {
             try level_loader_mod.reloadLevel(&arena, &level, &player);
         }

@@ -23,7 +23,7 @@ You may also check `src/input.zig` for the input configuration.
 - `src/main.zig` - Entry point and game loop
 - `src/player.zig` - Player logic
 - `src/level.zig` - Level/world management
-- `src/collider.zig` - Collider definitions (OneWay, Solid)
+- `src/collider.zig` - Collider definitions (OneWay, Solid, Crumbling)
 - `src/input.zig` - Input handling
 - `src/coin.zig` - Coin collection logic
 - `src/camera.zig` - Camera management
@@ -39,3 +39,9 @@ You may also check `src/input.zig` for the input configuration.
 
 Levels are defined in `assets/levels/level_1.json`. Edit while the game is
 running and press **F5** to reload instantly.
+
+### Collider Types
+
+- **Solid** - Blocks from all sides
+- **OneWay** - Can jump through from below, land on top
+- **Crumbling** - Breaks after player stands on it; can optionally respawn

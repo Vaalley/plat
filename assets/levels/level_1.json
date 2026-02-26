@@ -17,7 +17,7 @@
                 "b": 0
             }
         },
-         {
+        {
             "collider_type": "Solid",
             "position_x": 0,
             "position_y": 200,
@@ -52,6 +52,27 @@
                 "g": 128,
                 "b": 128
             }
+        },
+        {
+            "collider_type": "Crumbling",
+            "position_x": 400,
+            "position_y": 400,
+            "width": 100,
+            "height": 20,
+            "color": { "r": 40, "g": 180, "b": 40 },
+            "crumble_delay": 1.5,
+            "respawn": true,
+            "respawn_delay": 3.0
+        },
+        {
+            "collider_type": "Crumbling",
+            "position_x": 600,
+            "position_y": 300,
+            "width": 100,
+            "height": 20,
+            "color": { "r": 40, "g": 180, "b": 40 },
+            "crumble_delay": 1,
+            "respawn": false
         }
     ],
     "coins": [

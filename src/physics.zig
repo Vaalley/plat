@@ -16,13 +16,6 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
         const collider_top = collider_hitbox.y;
         const near_top = feetY >= collider_top and feetY <= collider_top + LANDING_TOLERANCE;
 
-        // Handle collisions for OneWay colliders
-        if (collider.collider_type == .OneWay and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox) and player.velocity.y >= 0 and near_top) {
-            player.is_grounded = true;
-            player.position.y = collider_hitbox.y - player.hitbox_height;
-            player.velocity.y = 0;
-        }
-
         // Handle collisions for Solid colliders
         if (collider.collider_type == .Solid and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox)) {
             // Calculate overlap on each axis to find smallest penetration
@@ -51,6 +44,24 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
                 // Hitting right wall
                 player.position.x = collider_hitbox.x + collider_hitbox.width;
                 player.velocity.x = 0;
+            }
+        }
+
+        // Handle collisions for OneWay colliders
+        if (collider.collider_type == .OneWay and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox) and player.velocity.y >= 0 and near_top) {
+            player.is_grounded = true;
+            player.position.y = collider_hitbox.y - player.hitbox_height;
+            player.velocity.y = 0;
+        }
+
+        // Handle collisions for Crumbling colliders (like OneWay + start timer)
+        if (collider.collider_type == .Crumbling and collider.is_active and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox) and player.velocity.y >= 0 and near_top) {
+            player.is_grounded = true;
+            player.position.y = collider_hitbox.y - player.hitbox_height;
+            player.velocity.y = 0;
+            // Start crumble timer if not already started
+            if (collider.timer == 0) {
+                collider.timer = collider.crumble_delay;
             }
         }
     }

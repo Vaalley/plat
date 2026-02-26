@@ -14,17 +14,18 @@ A simple 2D platformer built with Zig and Raylib.
 
 ### Modules
 
-| Module         | Purpose                                   |
-| -------------- | ----------------------------------------- |
-| `main.zig`     | Game loop, initialization, orchestration  |
-| `player.zig`   | Player movement, physics, collision, dash |
-| `input.zig`    | Input gathering (keyboard → game actions) |
-| `level.zig`    | Collection of colliders and coins         |
-| `collider.zig` | Collider types (OneWay, Solid)            |
-| `camera.zig`   | 2D camera following player                |
-| `coin.zig`     | Collectible coins                         |
-| `ui.zig`       | UI drawing and debug HUD                  |
-| `physics.zig`  | Collision resolution                      |
+| Module             | Purpose                                         |
+| ------------------ | ----------------------------------------------- |
+| `main.zig`         | Game loop, initialization, orchestration        |
+| `player.zig`       | Player movement, physics, collision, dash       |
+| `input.zig`        | Input gathering (keyboard → game actions)       |
+| `level.zig`        | Collection of colliders and coins               |
+| `collider.zig`     | Collider types (OneWay, Solid, Crumbling)       |
+| `camera.zig`       | 2D camera following player                      |
+| `coin.zig`         | Collectible coins                               |
+| `ui.zig`           | UI drawing and debug HUD                        |
+| `physics.zig`      | Collision resolution                            |
+| `level_loader.zig` | JSON level loading, hot reload, arena allocator |
 
 ### Key Patterns
 
@@ -32,6 +33,24 @@ A simple 2D platformer built with Zig and Raylib.
 2. **Module separation:** Each system in its own file with clear
    responsibilities
 3. **Screen vs World space:** UI in screen space, game objects in world space
+4. **Arena allocator:** Level data uses arena allocation - everything freed at
+   once on reload
+
+### Memory Management
+
+- **Arena allocator** for level data: All colliders/coins allocated from arena
+- **Hot reload:** Reset arena (free all), reload JSON, reallocate - no leaks, no
+  fragmentation
+- **Lifetime:** Level data lives for entire level duration; reset only on F5 or
+  death
+
+### Collider Behaviors
+
+| Type      | Collision          | Special                           |
+| --------- | ------------------ | --------------------------------- |
+| Solid     | Blocks all sides   | -                                 |
+| OneWay    | Only land from top | Pass through from below           |
+| Crumbling | Like OneWay        | Timer starts on land; can respawn |
 
 ## Current State
 
@@ -43,7 +62,8 @@ A simple 2D platformer built with Zig and Raylib.
 - ✅ Camera following player
 - ✅ Double jump
 - ✅ Coins to collect
-- ✅ Two collider types: OneWay (pass-through) and Solid (full block)
+- ✅ Three collider types: Solid, OneWay (pass-through), Crumbling (breaks after
+  standing on it)
 - ✅ JSON level loading
 - ✅ Hot level reload (F5)
 - ✅ Debug HUD (F1 toggle)

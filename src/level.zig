@@ -9,9 +9,37 @@ pub const Level = struct {
 
 pub fn draw(level: *Level) void {
     for (level.colliders) |*collider| {
+        if (collider.collider_type == .Crumbling and !collider.is_active) continue;
         collider_mod.draw(collider);
     }
     for (level.coins) |*coin| {
         coin_mod.draw(coin);
+    }
+}
+
+pub fn update(level: *Level, deltaTime: f32) void {
+    for (level.colliders) |*collider| {
+        if (collider.collider_type != .Crumbling) continue;
+
+        if (collider.is_active) {
+            // Active: count down crumble timer (started when player landed)
+            if (collider.timer > 0) {
+                collider.timer -= deltaTime;
+                if (collider.timer <= 0) {
+                    // Crumble!
+                    collider.is_active = false;
+                    if (collider.respawn) {
+                        collider.timer = collider.respawn_delay; // Reuse timer for respawn
+                    }
+                }
+            }
+        } else if (collider.respawn) {
+            // Inactive but respawns: count down respawn timer
+            collider.timer -= deltaTime;
+            if (collider.timer <= 0) {
+                collider.is_active = true;
+                collider.timer = 0;
+            }
+        }
     }
 }

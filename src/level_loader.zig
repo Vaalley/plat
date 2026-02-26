@@ -26,6 +26,9 @@ const ColliderData = struct {
     width: f32,
     height: f32,
     color: ColorData,
+    crumble_delay: f32 = 0,
+    respawn: bool = false,
+    respawn_delay: f32 = 0,
 };
 
 const CoinData = struct {
@@ -62,7 +65,13 @@ pub fn load_level(level_data: LevelData, allocator: std.mem.Allocator) !level_mo
     for (0..level.colliders.len) |i| {
         const collider_data = level_data.colliders[i];
         const color = rl.Color{ .r = collider_data.color.r, .g = collider_data.color.g, .b = collider_data.color.b, .a = 255 };
+
         level.colliders[i] = collider_mod.init(.{ .x = collider_data.position_x, .y = collider_data.position_y }, .{ .x = collider_data.width, .y = collider_data.height }, color, collider_data.collider_type);
+
+        // Set crumbling collider specific properties
+        level.colliders[i].crumble_delay = collider_data.crumble_delay;
+        level.colliders[i].respawn = collider_data.respawn;
+        level.colliders[i].respawn_delay = collider_data.respawn_delay;
     }
 
     errdefer allocator.free(level.colliders);
@@ -71,6 +80,7 @@ pub fn load_level(level_data: LevelData, allocator: std.mem.Allocator) !level_mo
     level.coins = try allocator.alloc(coin_mod.Coin, level_data.coins.len);
     for (0..level.coins.len) |i| {
         const coin_data = level_data.coins[i];
+
         level.coins[i] = coin_mod.init(coin_data.position_x, coin_data.position_y);
     }
 
