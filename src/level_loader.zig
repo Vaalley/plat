@@ -82,5 +82,6 @@ pub fn reloadLevel(arena: *std.heap.ArenaAllocator, level: *level_mod.Level, pla
     const level_data = try load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
     level.* = try load_level(level_data, arena.allocator());
     player.spawn_position = .{ .x = level_data.player_spawn_point.position_x, .y = level_data.player_spawn_point.position_y };
-    player_mod.reset(player);
+    player.coins_collected = 0;
+    player_mod.respawnPlayer(player);
 }

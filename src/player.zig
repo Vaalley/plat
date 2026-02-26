@@ -50,13 +50,12 @@ pub fn init(spawn_x: f32, spawn_y: f32) Player {
     };
 }
 
-pub fn reset(player: *Player) void {
+pub fn respawnPlayer(player: *Player) void {
     player.position = player.spawn_position;
     player.velocity = .{ .x = 0, .y = 0 };
     player.acceleration = .{ .x = 0, .y = 0 };
     player.dash_cooldown = 0;
     player.is_grounded = false;
-    player.coins_collected = 0;
     player.jumps_remaining = 2;
 }
 
@@ -113,7 +112,7 @@ fn updatePosition(player: *Player, deltaTime: f32) void {
     player.position.y += player.velocity.y * deltaTime;
 
     if (player.position.y > DEATH_Y) {
-        reset(player);
+        respawnPlayer(player);
     }
 }
 
