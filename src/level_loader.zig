@@ -49,26 +49,27 @@ pub fn load_level_data_from_file(allocator: std.mem.Allocator, file_path: []cons
     // Additionally, 1024 * 1024 is a magic number (maybe fix this in the future?)
     const content = try file.readToEndAlloc(allocator, 1024 * 1024);
 
-    const parsed = try std.json.parseFromSlice(LevelData, allocator, content, .{});
-    defer parsed.deinit();
-
-    return parsed.value;
+    const level_data = try std.json.parseFromSliceLeaky(LevelData, allocator, content, .{});
+    return level_data;
 }
 
-pub fn load_level(level_data: LevelData) level_mod.Level {
+/// Takes an object (typically from load_level_data_from_file) and converts it to a Level
+pub fn load_level(level_data: LevelData, allocator: std.mem.Allocator) !level_mod.Level {
     var level: level_mod.Level = undefined;
 
-    // Copy colliders (limit to 100)
-    level.collider_count = @min(level_data.colliders.len, 100);
-    for (0..level.collider_count) |i| {
+    // Copy colliders
+    level.colliders = try allocator.alloc(collider_mod.Collider, level_data.colliders.len);
+    for (0..level.colliders.len) |i| {
         const collider_data = level_data.colliders[i];
         const color = rl.Color{ .r = collider_data.color.r, .g = collider_data.color.g, .b = collider_data.color.b, .a = 255 };
         level.colliders[i] = collider_mod.init(.{ .x = collider_data.position_x, .y = collider_data.position_y }, .{ .x = collider_data.width, .y = collider_data.height }, color, collider_data.collider_type);
     }
 
-    // Copy coins (limit to 100)
-    level.coin_count = @min(level_data.coins.len, 100);
-    for (0..level.coin_count) |i| {
+    errdefer allocator.free(level.colliders);
+
+    // Copy coins
+    level.coins = try allocator.alloc(coin_mod.Coin, level_data.coins.len);
+    for (0..level.coins.len) |i| {
         const coin_data = level_data.coins[i];
         level.coins[i] = coin_mod.init(coin_data.position_x, coin_data.position_y);
     }
@@ -79,7 +80,7 @@ pub fn load_level(level_data: LevelData) level_mod.Level {
 pub fn reloadLevel(arena: *std.heap.ArenaAllocator, level: *level_mod.Level, player: *player_mod.Player) !void {
     _ = arena.reset(.retain_capacity); // Free all, keep memory
     const level_data = try load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
-    level.* = load_level(level_data);
+    level.* = try load_level(level_data, arena.allocator());
     player.spawn_position = .{ .x = level_data.player_spawn_point.position_x, .y = level_data.player_spawn_point.position_y };
     player_mod.reset(player);
 }

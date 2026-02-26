@@ -60,7 +60,7 @@ pub fn draw_debug_hud(player: *player_mod.Player, level: *level_mod.Level, camer
     draw_debug_line(DEBUG_PANEL_X + PADDING, line_y, std.fmt.bufPrintZ(&buf, "Coins Collected: {d}", .{player.coins_collected}) catch "Coins: err");
     line_y += LINE_HEIGHT;
 
-    draw_debug_line(DEBUG_PANEL_X + PADDING, line_y, std.fmt.bufPrintZ(&buf, "Coins: {d}", .{level.coin_count}) catch "Coins: err");
+    draw_debug_line(DEBUG_PANEL_X + PADDING, line_y, std.fmt.bufPrintZ(&buf, "Coins: {d}", .{level.coins.len}) catch "Coins: err");
     line_y += LINE_HEIGHT;
 
     draw_debug_line(DEBUG_PANEL_X + PADDING, line_y, std.fmt.bufPrintZ(&buf, "Camera Target: ({d:.1}, {d:.1})", .{ camera.camera.target.x, camera.camera.target.y }) catch "Camera Target: err");

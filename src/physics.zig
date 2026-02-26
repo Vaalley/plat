@@ -11,9 +11,8 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
     const feetY = player.position.y + player.hitbox_height;
 
     // Colliders
-    for (0..level.collider_count) |index| {
-        const collider = level.colliders[index];
-        const collider_hitbox = collider_mod.get_hitbox(&collider);
+    for (level.colliders) |*collider| {
+        const collider_hitbox = collider_mod.get_hitbox(collider);
         const collider_top = collider_hitbox.y;
         const near_top = feetY >= collider_top and feetY <= collider_top + LANDING_TOLERANCE;
 
@@ -57,8 +56,7 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
     }
 
     // Coins
-    for (0..level.coin_count) |index| {
-        const coin = &level.coins[index];
+    for (level.coins) |*coin| {
         if (!coin.is_collected and rl.checkCollisionCircleRec(coin.position, coin.radius, player_mod.get_hitbox(player))) {
             coin.is_collected = true;
             player.coins_collected += 1;

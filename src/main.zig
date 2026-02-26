@@ -31,7 +31,7 @@ pub fn main() anyerror!void {
     const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
     var player: player_mod.Player = player_mod.init(level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y);
     var input = input_mod.init();
-    var level = level_loader_mod.load_level(level_data);
+    var level = try level_loader_mod.load_level(level_data, arena.allocator());
     var camera: camera_mod.Camera = camera_mod.init(screenWidth, screenHeight);
 
     // Main game loop

@@ -15,6 +15,14 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(exe);
 
+    // Install assets directory to bin folder
+    const install_assets = b.addInstallDirectory(.{
+        .source_dir = b.path("assets"),
+        .install_dir = .bin,
+        .install_subdir = "assets",
+    });
+    b.getInstallStep().dependOn(&install_assets.step);
+
     const raylib_dep = b.dependency("raylib_zig", .{
         .target = target,
         .optimize = optimize,
