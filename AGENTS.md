@@ -74,3 +74,12 @@ A simple 2D platformer built with Zig and Raylib.
 - No premature optimization (measure first)
 - Functions extracted when update() gets too long
 - Magic numbers extracted as named constants
+
+## Naming Conventions
+
+- Constants: UPPER_SNAKE_CASE
+- Variables: snake_case
+- Imports: snake_case
+- Functions: camelCase
+- Types: PascalCase
+- Files: kebab-case

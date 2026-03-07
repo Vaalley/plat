@@ -16,14 +16,16 @@ pub fn main() anyerror!void {
     defer arena.deinit(); // Frees EVERYTHING at once
 
     // Initialization phase - set up window and basic systems
-    const screenWidth = 1280;
-    const screenHeight = 720;
+    const SCREEN_WIDTH = 1280;
+    const MIN_SCREEN_WIDTH = 720;
+    const SCREEN_HEIGHT = 720;
+    const MIN_SCREEN_HEIGHT = 480;
 
     rl.setConfigFlags(.{ .window_resizable = true, .vsync_hint = true });
 
-    rl.initWindow(screenWidth, screenHeight, "plat");
+    rl.initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "plat");
     defer rl.closeWindow(); // Close window and OpenGL context
-    rl.setWindowMinSize(720, 480);
+    rl.setWindowMinSize(MIN_SCREEN_WIDTH, MIN_SCREEN_HEIGHT);
 
     // rl.setTargetFPS(60);
 
@@ -32,18 +34,18 @@ pub fn main() anyerror!void {
     var player: player_mod.Player = player_mod.init(level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y);
     var input = input_mod.init();
     var level = try level_loader_mod.load_level(level_data, arena.allocator());
-    var camera: camera_mod.Camera = camera_mod.init(screenWidth, screenHeight);
+    var camera: camera_mod.Camera = camera_mod.init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
-        const deltaTime: f32 = rl.getFrameTime();
+        const DELTA_TIME: f32 = rl.getFrameTime();
 
         // Input phase - gather all inputs
         input_mod.update(&input);
 
         // Update phase - process game logic
-        player_mod.update(&player, deltaTime, input);
-        level_mod.update(&level, deltaTime);
+        player_mod.update(&player, DELTA_TIME, input);
+        level_mod.update(&level, DELTA_TIME);
         if (input.reload_level) {
             try level_loader_mod.reloadLevel(&arena, &level, &player);
         }
@@ -64,9 +66,9 @@ pub fn main() anyerror!void {
 
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
-        ui_mod.draw_debug_hud(&player, &level, &camera, input.show_debug);
+        ui_mod.drawDebugHud(&player, &level, &camera, input.show_debug);
 
-        ui_mod.draw_text(@intCast(screenWidth - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
+        ui_mod.drawText(@intCast(SCREEN_WIDTH - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
         rl.endDrawing();
     }
 }

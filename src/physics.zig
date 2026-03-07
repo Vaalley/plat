@@ -9,14 +9,14 @@ const hazard_mod = @import("hazard.zig");
 const LANDING_TOLERANCE: f32 = 10.0;
 
 pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
-    const feetY = player.position.y + player.hitbox_height;
+    const FEET_Y = player.position.y + player.hitbox_height;
     var should_respawn = false;
 
     // Colliders
     for (level.colliders) |*collider| {
         const collider_hitbox = collider_mod.get_hitbox(collider);
         const collider_top = collider_hitbox.y;
-        const near_top = feetY >= collider_top and feetY <= collider_top + LANDING_TOLERANCE;
+        const near_top = FEET_Y >= collider_top and FEET_Y <= collider_top + LANDING_TOLERANCE;
 
         // Handle collisions for Solid colliders
         if (collider.collider_type == .Solid and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox)) {
