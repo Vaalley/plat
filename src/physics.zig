@@ -9,10 +9,14 @@ const hazard_mod = @import("hazard.zig");
 const LANDING_TOLERANCE: f32 = 10.0;
 
 pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
-    const FEET_Y = player.position.y + player.hitbox_height;
-    var should_respawn = false;
+    resolveColliderCollisions(player, level);
+    resolveCoinCollisions(player, level);
+    resolveHazardCollisions(player, level);
+}
 
-    // Colliders
+fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
+    const FEET_Y = player.position.y + player.hitbox_height;
+
     for (level.colliders) |*collider| {
         const collider_hitbox = collider_mod.get_hitbox(collider);
         const collider_top = collider_hitbox.y;
@@ -68,6 +72,13 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
         }
     }
 
+    // This is here for now, but may be moved later on
+    if (player.is_grounded) {
+        player.jumps_remaining = 2;
+    }
+}
+
+fn resolveCoinCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
     // Coins
     for (level.coins) |*coin| {
         if (!coin.is_collected and rl.checkCollisionCircleRec(coin.position, coin.radius, player_mod.get_hitbox(player))) {
@@ -75,21 +86,15 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
             player.coins_collected += 1;
         }
     }
+}
 
-    if (player.is_grounded) {
-        player.jumps_remaining = 2;
-    }
-
+fn resolveHazardCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
     // Hazards
     for (level.hazards) |*hazard| {
         if (rl.checkCollisionRecs(hazard_mod.get_hitbox(hazard), player_mod.get_hitbox(player))) {
-            should_respawn = true;
+            player_mod.respawnPlayer(player);
             break;
         }
-    }
-
-    if (should_respawn) {
-        player_mod.respawnPlayer(player);
     }
 }
 
