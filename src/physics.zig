@@ -4,11 +4,13 @@ const rl = @import("raylib");
 const player_mod = @import("player.zig");
 const level_mod = @import("level.zig");
 const collider_mod = @import("collider.zig");
+const hazard_mod = @import("hazard.zig");
 
 const LANDING_TOLERANCE: f32 = 10.0;
 
 pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
     const feetY = player.position.y + player.hitbox_height;
+    var should_respawn = false;
 
     // Colliders
     for (level.colliders) |*collider| {
@@ -76,6 +78,18 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
 
     if (player.is_grounded) {
         player.jumps_remaining = 2;
+    }
+
+    // Hazards
+    for (level.hazards) |*hazard| {
+        if (rl.checkCollisionRecs(hazard_mod.get_hitbox(hazard), player_mod.get_hitbox(player))) {
+            should_respawn = true;
+            break;
+        }
+    }
+
+    if (should_respawn) {
+        player_mod.respawnPlayer(player);
     }
 }
 

@@ -1,10 +1,12 @@
 //! Container for all level objects (colliders and coins).
 const collider_mod = @import("collider.zig");
 const coin_mod = @import("coin.zig");
+const hazard_mod = @import("hazard.zig");
 
 pub const Level = struct {
     colliders: []collider_mod.Collider,
     coins: []coin_mod.Coin,
+    hazards: []hazard_mod.Hazard,
 };
 
 pub fn draw(level: *Level) void {
@@ -14,6 +16,9 @@ pub fn draw(level: *Level) void {
     }
     for (level.coins) |*coin| {
         coin_mod.draw(coin);
+    }
+    for (level.hazards) |*hazard| {
+        hazard_mod.draw(hazard);
     }
 }
 

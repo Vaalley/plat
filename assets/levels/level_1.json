@@ -96,5 +96,20 @@
             "position_x": 550,
             "position_y": 220
         }
+    ],
+    "hazards": [
+        {
+            "position_x": 300,
+            "position_y": 450,
+            "size": {
+                "x": 50,
+                "y": 50
+            },
+            "color": {
+                "r": 200,
+                "g": 50,
+                "b": 50
+            }
+        }
     ]
 }
