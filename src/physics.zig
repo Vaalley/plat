@@ -97,5 +97,3 @@ fn resolveHazardCollisions(player: *player_mod.Player, level: *level_mod.Level) 
         }
     }
 }
-
-// Future: pub fn resolveEnemyCollisions(enemies: []Enemy, level: *Level) void

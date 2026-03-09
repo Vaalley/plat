@@ -11,6 +11,8 @@ const physics_mod = @import("physics.zig");
 const ui_mod = @import("ui.zig");
 const level_loader_mod = @import("level_loader.zig");
 
+const FIRST_LEVEL_PATH = "assets/levels/level_1.json";
+
 pub fn main() anyerror!void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit(); // Frees EVERYTHING at once
@@ -31,7 +33,7 @@ pub fn main() anyerror!void {
     // rl.setTargetFPS(60);
 
     // Initialize game objects
-    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), "assets/levels/level_1.json");
+    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), FIRST_LEVEL_PATH);
     var player: player_mod.Player = player_mod.init(level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y);
     var input = input_mod.init();
     var level = try level_loader_mod.load_level(level_data, arena.allocator());
