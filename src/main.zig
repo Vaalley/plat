@@ -26,6 +26,7 @@ pub fn main() anyerror!void {
     rl.initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "plat");
     defer rl.closeWindow(); // Close window and OpenGL context
     rl.setWindowMinSize(MIN_SCREEN_WIDTH, MIN_SCREEN_HEIGHT);
+    rl.maximizeWindow();
 
     // rl.setTargetFPS(60);
 
@@ -34,11 +35,15 @@ pub fn main() anyerror!void {
     var player: player_mod.Player = player_mod.init(level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y);
     var input = input_mod.init();
     var level = try level_loader_mod.load_level(level_data, arena.allocator());
-    var camera: camera_mod.Camera = camera_mod.init(SCREEN_WIDTH, SCREEN_HEIGHT);
+    var camera: camera_mod.Camera = camera_mod.init(
+        @as(f32, @floatFromInt(rl.getScreenWidth())),
+        @as(f32, @floatFromInt(rl.getScreenHeight())),
+    );
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         const DELTA_TIME: f32 = rl.getFrameTime();
+        const CURRENT_SCREEN_WIDTH: i32 = rl.getScreenWidth();
 
         // Input phase - gather all inputs
         input_mod.update(&input);
@@ -68,7 +73,7 @@ pub fn main() anyerror!void {
         rl.endMode2D();
         ui_mod.drawDebugHud(&player, &level, &camera, input.show_debug);
 
-        ui_mod.drawText(@intCast(SCREEN_WIDTH - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
+        ui_mod.drawText(@intCast(CURRENT_SCREEN_WIDTH - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
         rl.endDrawing();
     }
 }
