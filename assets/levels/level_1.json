@@ -111,5 +111,12 @@
                 "b": 50
             }
         }
+    ],
+    "checkpoints": [
+        {
+            "position_x": 600,
+            "position_y": 206,
+            "size": { "x": 32, "y": 64 }
+        }
     ]
 }

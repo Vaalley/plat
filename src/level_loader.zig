@@ -8,6 +8,7 @@ const collider_mod = @import("collider.zig");
 const coin_mod = @import("coin.zig");
 const player_mod = @import("player.zig");
 const hazard_mod = @import("hazard.zig");
+const checkpoint_mod = @import("checkpoint.zig");
 
 const ColorData = struct {
     r: u8,
@@ -44,12 +45,19 @@ const HazardData = struct {
     color: ColorData,
 };
 
+const CheckpointData = struct {
+    position_x: f32,
+    position_y: f32,
+    size: rl.Vector2,
+};
+
 pub const LevelData = struct {
     name: []const u8,
     player_spawn_point: PlayerSpawnPoint,
     colliders: []ColliderData,
     coins: []CoinData,
     hazards: []HazardData,
+    checkpoints: []CheckpointData,
 };
 
 /// Loads level data from a JSON file using std.json
@@ -100,6 +108,14 @@ pub fn load_level(level_data: LevelData, allocator: std.mem.Allocator) !level_mo
         const color = rl.Color{ .r = hazard_data.color.r, .g = hazard_data.color.g, .b = hazard_data.color.b, .a = 255 };
 
         level.hazards[i] = hazard_mod.init(hazard_data.position_x, hazard_data.position_y, hazard_data.size, color);
+    }
+
+    // Copy checkpoints
+    level.checkpoints = try allocator.alloc(checkpoint_mod.Checkpoint, level_data.checkpoints.len);
+    for (0..level.checkpoints.len) |i| {
+        const checkpoint_data = level_data.checkpoints[i];
+
+        level.checkpoints[i] = checkpoint_mod.init(.{ .x = checkpoint_data.position_x, .y = checkpoint_data.position_y }, checkpoint_data.size);
     }
 
     return level;

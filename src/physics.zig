@@ -5,12 +5,14 @@ const player_mod = @import("player.zig");
 const level_mod = @import("level.zig");
 const collider_mod = @import("collider.zig");
 const hazard_mod = @import("hazard.zig");
+const checkpoint_mod = @import("checkpoint.zig");
 
 const LANDING_TOLERANCE: f32 = 10.0;
 
 pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
     resolveColliderCollisions(player, level);
     resolveCoinCollisions(player, level);
+    resolveCheckpointCollisions(player, level);
     resolveHazardCollisions(player, level);
 }
 
@@ -94,6 +96,23 @@ fn resolveHazardCollisions(player: *player_mod.Player, level: *level_mod.Level) 
         if (rl.checkCollisionRecs(hazard_mod.get_hitbox(hazard), player_mod.get_hitbox(player))) {
             player_mod.respawnPlayer(player);
             break;
+        }
+    }
+}
+
+fn resolveCheckpointCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
+    // Checkpoints
+    for (level.checkpoints) |*checkpoint| {
+        if (rl.checkCollisionRecs(checkpoint_mod.get_hitbox(checkpoint), player_mod.get_hitbox(player))) {
+            // deactivate all checkpoints and then activate this one
+            for (level.checkpoints) |*other_checkpoint| {
+                other_checkpoint.is_active = false;
+            }
+
+            if (!checkpoint.is_active) {
+                checkpoint.is_active = true;
+                player.spawn_position = checkpoint.position;
+            }
         }
     }
 }
