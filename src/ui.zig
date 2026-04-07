@@ -64,6 +64,9 @@ pub fn drawDebugHud(player: *player_mod.Player, level: *level_mod.Level, camera:
     line_y += LINE_HEIGHT;
 
     drawDebugLine(DEBUG_PANEL_X + PADDING, line_y, std.fmt.bufPrintZ(&buf, "Camera Target: ({d:.1}, {d:.1})", .{ camera.camera.target.x, camera.camera.target.y }) catch "Camera Target: err");
+    line_y += LINE_HEIGHT;
+
+    drawDebugLine(DEBUG_PANEL_X + PADDING, line_y, std.fmt.bufPrintZ(&buf, "Current loaded level: {s}", .{level.name}) catch "Current loaded level: err");
 }
 
 fn drawDebugLine(x: f32, y: f32, text: [:0]const u8) void {

@@ -1,0 +1,51 @@
+{
+    "name": "Level 2",
+    "player_spawn_point": {
+        "position_x": 50,
+        "position_y": 436
+    },
+    "colliders": [
+        {
+            "collider_type": "Solid",
+            "position_x": 0,
+            "position_y": 500,
+            "width": 500,
+            "height": 50,
+            "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+            }
+        },
+        {
+            "collider_type": "Solid",
+            "position_x": 0,
+            "position_y": 200,
+            "width": 50,
+            "height": 300,
+            "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+            }
+        },
+        {
+            "collider_type": "OneWay",
+            "position_x": 700,
+            "position_y": 400,
+            "width": 300,
+            "height": 20,
+            "color": {
+                "r": 128,
+                "g": 128,
+                "b": 128
+            }
+        }
+    ],
+    "coins": [
+        {
+            "position_x": 200,
+            "position_y": 450
+        }
+    ]
+}

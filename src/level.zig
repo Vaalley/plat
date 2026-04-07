@@ -3,12 +3,17 @@ const collider_mod = @import("collider.zig");
 const coin_mod = @import("coin.zig");
 const hazard_mod = @import("hazard.zig");
 const checkpoint_mod = @import("checkpoint.zig");
+const goal_mod = @import("goal.zig");
 
 pub const Level = struct {
+    name: []const u8,
     colliders: []collider_mod.Collider,
     coins: []coin_mod.Coin,
     hazards: []hazard_mod.Hazard,
     checkpoints: []checkpoint_mod.Checkpoint,
+    is_completed: bool = false,
+    completion_timer: f32 = 0,
+    goal: ?goal_mod.Goal = null,
 };
 
 pub fn draw(level: *Level) void {
@@ -16,14 +21,21 @@ pub fn draw(level: *Level) void {
         if (collider.collider_type == .Crumbling and !collider.is_active) continue;
         collider_mod.draw(collider);
     }
+
     for (level.checkpoints) |*checkpoint| {
         checkpoint_mod.draw(checkpoint);
     }
+
     for (level.coins) |*coin| {
         coin_mod.draw(coin);
     }
+
     for (level.hazards) |*hazard| {
         hazard_mod.draw(hazard);
+    }
+
+    if (level.goal) |*goal| {
+        goal_mod.draw(goal);
     }
 }
 

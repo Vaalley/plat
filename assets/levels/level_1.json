@@ -1,122 +1,131 @@
 {
-    "name": "Level 1",
-    "player_spawn_point": {
-        "position_x": 50,
-        "position_y": 436
-    },
-    "colliders": [
-        {
-            "collider_type": "Solid",
-            "position_x": 0,
-            "position_y": 500,
-            "width": 500,
-            "height": 50,
-            "color": {
-                "r": 0,
-                "g": 0,
-                "b": 0
-            }
-        },
-        {
-            "collider_type": "Solid",
-            "position_x": 0,
-            "position_y": 200,
-            "width": 50,
-            "height": 300,
-            "color": {
-                "r": 0,
-                "g": 0,
-                "b": 0
-            }
-        },
-        {
-            "collider_type": "OneWay",
-            "position_x": 700,
-            "position_y": 400,
-            "width": 300,
-            "height": 20,
-            "color": {
-                "r": 128,
-                "g": 128,
-                "b": 128
-            }
-        },
-        {
-            "collider_type": "OneWay",
-            "position_x": 450,
-            "position_y": 270,
-            "width": 200,
-            "height": 20,
-            "color": {
-                "r": 128,
-                "g": 128,
-                "b": 128
-            }
-        },
-        {
-            "collider_type": "Crumbling",
-            "position_x": 400,
-            "position_y": 400,
-            "width": 100,
-            "height": 20,
-            "color": { "r": 40, "g": 180, "b": 40 },
-            "crumble_delay": 1.5,
-            "respawn": true,
-            "respawn_delay": 3.0
-        },
-        {
-            "collider_type": "Crumbling",
-            "position_x": 600,
-            "position_y": 300,
-            "width": 100,
-            "height": 20,
-            "color": { "r": 40, "g": 180, "b": 40 },
-            "crumble_delay": 1,
-            "respawn": false
-        }
-    ],
-    "coins": [
-        {
-            "position_x": 200,
-            "position_y": 450
-        },
-        {
-            "position_x": 800,
-            "position_y": 350
-        },
-        {
-            "position_x": 400,
-            "position_y": 450
-        },
-        {
-            "position_x": 600,
-            "position_y": 350
-        },
-        {
-            "position_x": 550,
-            "position_y": 220
-        }
-    ],
-    "hazards": [
-        {
-            "position_x": 300,
-            "position_y": 450,
-            "size": {
-                "x": 50,
-                "y": 50
-            },
-            "color": {
-                "r": 200,
-                "g": 50,
-                "b": 50
-            }
-        }
-    ],
-    "checkpoints": [
-        {
-            "position_x": 600,
-            "position_y": 206,
-            "size": { "x": 32, "y": 64 }
-        }
-    ]
+	"name": "Level 1",
+	"player_spawn_point": {
+		"position_x": 50,
+		"position_y": 436
+	},
+	"goal": {
+		"position_x": 1100,
+		"position_y": 300,
+		"size": {
+			"x": 50,
+			"y": 100
+		},
+		"next_level": "assets/levels/level_2.json"
+	},
+	"colliders": [
+		{
+			"collider_type": "Solid",
+			"position_x": 0,
+			"position_y": 500,
+			"width": 500,
+			"height": 50,
+			"color": {
+				"r": 0,
+				"g": 0,
+				"b": 0
+			}
+		},
+		{
+			"collider_type": "Solid",
+			"position_x": 0,
+			"position_y": 200,
+			"width": 50,
+			"height": 300,
+			"color": {
+				"r": 0,
+				"g": 0,
+				"b": 0
+			}
+		},
+		{
+			"collider_type": "OneWay",
+			"position_x": 700,
+			"position_y": 400,
+			"width": 300,
+			"height": 20,
+			"color": {
+				"r": 128,
+				"g": 128,
+				"b": 128
+			}
+		},
+		{
+			"collider_type": "OneWay",
+			"position_x": 450,
+			"position_y": 270,
+			"width": 200,
+			"height": 20,
+			"color": {
+				"r": 128,
+				"g": 128,
+				"b": 128
+			}
+		},
+		{
+			"collider_type": "Crumbling",
+			"position_x": 400,
+			"position_y": 400,
+			"width": 100,
+			"height": 20,
+			"color": { "r": 40, "g": 180, "b": 40 },
+			"crumble_delay": 1.5,
+			"respawn": true,
+			"respawn_delay": 3.0
+		},
+		{
+			"collider_type": "Crumbling",
+			"position_x": 600,
+			"position_y": 300,
+			"width": 100,
+			"height": 20,
+			"color": { "r": 40, "g": 180, "b": 40 },
+			"crumble_delay": 1,
+			"respawn": false
+		}
+	],
+	"coins": [
+		{
+			"position_x": 200,
+			"position_y": 450
+		},
+		{
+			"position_x": 800,
+			"position_y": 350
+		},
+		{
+			"position_x": 400,
+			"position_y": 450
+		},
+		{
+			"position_x": 600,
+			"position_y": 350
+		},
+		{
+			"position_x": 550,
+			"position_y": 220
+		}
+	],
+	"hazards": [
+		{
+			"position_x": 300,
+			"position_y": 450,
+			"size": {
+				"x": 50,
+				"y": 50
+			},
+			"color": {
+				"r": 200,
+				"g": 50,
+				"b": 50
+			}
+		}
+	],
+	"checkpoints": [
+		{
+			"position_x": 600,
+			"position_y": 206,
+			"size": { "x": 32, "y": 64 }
+		}
+	]
 }

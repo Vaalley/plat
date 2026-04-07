@@ -6,6 +6,7 @@ const level_mod = @import("level.zig");
 const collider_mod = @import("collider.zig");
 const hazard_mod = @import("hazard.zig");
 const checkpoint_mod = @import("checkpoint.zig");
+const goal_mod = @import("goal.zig");
 
 const LANDING_TOLERANCE: f32 = 10.0;
 
@@ -14,6 +15,7 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
     resolveCoinCollisions(player, level);
     resolveCheckpointCollisions(player, level);
     resolveHazardCollisions(player, level);
+    resolveGoalCollisions(player, level);
 }
 
 fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
@@ -81,7 +83,6 @@ fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level
 }
 
 fn resolveCoinCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
-    // Coins
     for (level.coins) |*coin| {
         if (!coin.is_collected and rl.checkCollisionCircleRec(coin.position, coin.radius, player_mod.get_hitbox(player))) {
             coin.is_collected = true;
@@ -91,7 +92,6 @@ fn resolveCoinCollisions(player: *player_mod.Player, level: *level_mod.Level) vo
 }
 
 fn resolveHazardCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
-    // Hazards
     for (level.hazards) |*hazard| {
         if (rl.checkCollisionRecs(hazard_mod.get_hitbox(hazard), player_mod.get_hitbox(player))) {
             player_mod.respawnPlayer(player);
@@ -101,7 +101,6 @@ fn resolveHazardCollisions(player: *player_mod.Player, level: *level_mod.Level) 
 }
 
 fn resolveCheckpointCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
-    // Checkpoints
     for (level.checkpoints) |*checkpoint| {
         if (rl.checkCollisionRecs(checkpoint_mod.get_hitbox(checkpoint), player_mod.get_hitbox(player))) {
             // deactivate all checkpoints and then activate this one
@@ -113,6 +112,19 @@ fn resolveCheckpointCollisions(player: *player_mod.Player, level: *level_mod.Lev
                 checkpoint.is_active = true;
                 player.spawn_position = checkpoint.position;
             }
+        }
+    }
+}
+
+fn resolveGoalCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
+    if (level.goal) |*goal| {
+        if (rl.checkCollisionRecs(goal_mod.get_hitbox(goal), player_mod.get_hitbox(player)) and !level.is_completed) {
+            level.is_completed = true;
+            level.completion_timer = 3.0; // 3 seconds to show completion
+
+            // freeze player velocity and acceleration
+            player.velocity = .{ .x = 0, .y = 0 };
+            player.acceleration = .{ .x = 0, .y = 0 };
         }
     }
 }

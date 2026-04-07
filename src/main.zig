@@ -12,6 +12,7 @@ const ui_mod = @import("ui.zig");
 const level_loader_mod = @import("level_loader.zig");
 
 const FIRST_LEVEL_PATH = "assets/levels/level_1.json";
+const MAX_PATH_LEN = 260;
 
 pub fn main() anyerror!void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
@@ -22,6 +23,8 @@ pub fn main() anyerror!void {
     const MIN_SCREEN_WIDTH = 720;
     const SCREEN_HEIGHT = 720;
     const MIN_SCREEN_HEIGHT = 480;
+    var current_level_path: []const u8 = FIRST_LEVEL_PATH;
+    var current_level_path_buffer: [MAX_PATH_LEN]u8 = undefined;
 
     rl.setConfigFlags(.{ .window_resizable = true, .vsync_hint = true });
 
@@ -33,10 +36,10 @@ pub fn main() anyerror!void {
     // rl.setTargetFPS(60);
 
     // Initialize game objects
-    const level_data = try level_loader_mod.load_level_data_from_file(arena.allocator(), FIRST_LEVEL_PATH);
+    const level_data = try level_loader_mod.loadLevelDataFromFile(arena.allocator(), current_level_path);
     var player: player_mod.Player = player_mod.init(level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y);
     var input = input_mod.init();
-    var level = try level_loader_mod.load_level(level_data, arena.allocator());
+    var level = try level_loader_mod.buildLevel(level_data, arena.allocator());
     var camera: camera_mod.Camera = camera_mod.init(
         @as(f32, @floatFromInt(rl.getScreenWidth())),
         @as(f32, @floatFromInt(rl.getScreenHeight())),
@@ -46,19 +49,32 @@ pub fn main() anyerror!void {
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         const DELTA_TIME: f32 = rl.getFrameTime();
         const CURRENT_SCREEN_WIDTH: i32 = rl.getScreenWidth();
+        const CURRENT_SCREEN_HEIGHT: i32 = rl.getScreenHeight();
 
-        // Input phase - gather all inputs
-        input_mod.update(&input);
+        if (!level.is_completed) {
+            // Input phase - gather all inputs
+            input_mod.update(&input);
 
-        // Update phase - process game logic
-        player_mod.update(&player, DELTA_TIME, input);
-        level_mod.update(&level, DELTA_TIME);
-        if (input.reload_level) {
-            try level_loader_mod.reloadLevel(&arena, &level, &player);
+            // Update phase - process game logic
+            player_mod.update(&player, DELTA_TIME, input);
+            level_mod.update(&level, DELTA_TIME);
+            if (input.reload_level) {
+                try level_loader_mod.loadLevelFromPath(&arena, &level, &player, current_level_path);
+            }
+
+            // Physics phase - resolve movement and collisions
+            physics_mod.resolvePlayerCollisions(&player, &level);
+        } else {
+            level.completion_timer -= DELTA_TIME;
+            if (level.completion_timer <= 0) {
+                if (level.goal) |goal| {
+                    if (goal.next_level) |next_level_path| {
+                        current_level_path = try std.fmt.bufPrint(&current_level_path_buffer, "{s}", .{next_level_path});
+                        try level_loader_mod.loadLevelFromPath(&arena, &level, &player, current_level_path);
+                    }
+                }
+            }
         }
-
-        // Physics phase - resolve movement and collisions
-        physics_mod.resolvePlayerCollisions(&player, &level);
 
         // Camera phase - update camera position
         camera_mod.update(&camera, &player);
@@ -73,9 +89,23 @@ pub fn main() anyerror!void {
 
         // We don't want to defer this right after beginMode2D because we may want to draw UI stuff independent of the camera (in between endMode2D and endDrawing)
         rl.endMode2D();
+
         ui_mod.drawDebugHud(&player, &level, &camera, input.show_debug);
 
+        // Coin counter in the top right corner
         ui_mod.drawText(@intCast(CURRENT_SCREEN_WIDTH - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
+
+        if (level.is_completed) {
+            ui_mod.drawText(
+                @intCast(@divTrunc(CURRENT_SCREEN_WIDTH, 2)),
+                @intCast(@divTrunc(CURRENT_SCREEN_HEIGHT, 2)),
+                40,
+                rl.Color.black,
+                "Level completed! Loading next level...",
+                .{},
+            );
+        }
+
         rl.endDrawing();
     }
 }
