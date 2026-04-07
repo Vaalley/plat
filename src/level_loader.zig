@@ -132,7 +132,7 @@ pub fn buildLevel(level_data: LevelData, allocator: std.mem.Allocator) !level_mo
 
     // Copy goal
     if (level_data.goal) |goal_data| {
-        const next_level = try allocator.dupe(u8, goal_data.next_level);
+        const next_level: ?[]const u8 = if (goal_data.next_level) |s| try allocator.dupe(u8, s) else null;
         level.goal = goal_mod.init(.{ .x = goal_data.position_x, .y = goal_data.position_y }, goal_data.size, next_level);
     }
 

@@ -1,12 +1,12 @@
 {
 	"name": "Level 1",
 	"player_spawn_point": {
-		"position_x": 50,
-		"position_y": 436
+		"position_x": 80,
+		"position_y": 440
 	},
 	"goal": {
-		"position_x": 1100,
-		"position_y": 300,
+		"position_x": 1820,
+		"position_y": 100,
 		"size": {
 			"x": 50,
 			"y": 100
@@ -18,55 +18,31 @@
 			"collider_type": "Solid",
 			"position_x": 0,
 			"position_y": 500,
-			"width": 500,
-			"height": 50,
-			"color": {
-				"r": 0,
-				"g": 0,
-				"b": 0
-			}
+			"width": 400,
+			"height": 40,
+			"color": { "r": 60, "g": 60, "b": 60 }
 		},
 		{
 			"collider_type": "Solid",
 			"position_x": 0,
 			"position_y": 200,
-			"width": 50,
+			"width": 40,
 			"height": 300,
-			"color": {
-				"r": 0,
-				"g": 0,
-				"b": 0
-			}
+			"color": { "r": 60, "g": 60, "b": 60 }
 		},
 		{
-			"collider_type": "OneWay",
-			"position_x": 700,
-			"position_y": 400,
-			"width": 300,
-			"height": 20,
-			"color": {
-				"r": 128,
-				"g": 128,
-				"b": 128
-			}
-		},
-		{
-			"collider_type": "OneWay",
+			"collider_type": "Solid",
 			"position_x": 450,
-			"position_y": 270,
+			"position_y": 500,
 			"width": 200,
-			"height": 20,
-			"color": {
-				"r": 128,
-				"g": 128,
-				"b": 128
-			}
+			"height": 40,
+			"color": { "r": 60, "g": 60, "b": 60 }
 		},
 		{
 			"collider_type": "Crumbling",
 			"position_x": 400,
-			"position_y": 400,
-			"width": 100,
+			"position_y": 500,
+			"width": 50,
 			"height": 20,
 			"color": { "r": 40, "g": 180, "b": 40 },
 			"crumble_delay": 1.5,
@@ -74,57 +50,151 @@
 			"respawn_delay": 3.0
 		},
 		{
+			"collider_type": "OneWay",
+			"position_x": 500,
+			"position_y": 420,
+			"width": 120,
+			"height": 20,
+			"color": { "r": 100, "g": 100, "b": 200 }
+		},
+		{
+			"collider_type": "OneWay",
+			"position_x": 640,
+			"position_y": 340,
+			"width": 120,
+			"height": 20,
+			"color": { "r": 100, "g": 100, "b": 200 }
+		},
+		{
+			"collider_type": "OneWay",
+			"position_x": 780,
+			"position_y": 260,
+			"width": 120,
+			"height": 20,
+			"color": { "r": 100, "g": 100, "b": 200 }
+		},
+		{
+			"collider_type": "Solid",
+			"position_x": 900,
+			"position_y": 500,
+			"width": 50,
+			"height": 40,
+			"color": { "r": 60, "g": 60, "b": 60 }
+		},
+		{
+			"collider_type": "Solid",
+			"position_x": 950,
+			"position_y": 460,
+			"width": 150,
+			"height": 80,
+			"color": { "r": 60, "g": 60, "b": 60 }
+		},
+		{
 			"collider_type": "Crumbling",
-			"position_x": 600,
-			"position_y": 300,
-			"width": 100,
+			"position_x": 1100,
+			"position_y": 460,
+			"width": 80,
 			"height": 20,
 			"color": { "r": 40, "g": 180, "b": 40 },
-			"crumble_delay": 1,
+			"crumble_delay": 1.0,
+			"respawn": true,
+			"respawn_delay": 3.0
+		},
+		{
+			"collider_type": "Crumbling",
+			"position_x": 1200,
+			"position_y": 420,
+			"width": 80,
+			"height": 20,
+			"color": { "r": 40, "g": 180, "b": 40 },
+			"crumble_delay": 0.8,
+			"respawn": true,
+			"respawn_delay": 3.0
+		},
+		{
+			"collider_type": "Crumbling",
+			"position_x": 1300,
+			"position_y": 380,
+			"width": 80,
+			"height": 20,
+			"color": { "r": 40, "g": 180, "b": 40 },
+			"crumble_delay": 0.6,
 			"respawn": false
+		},
+		{
+			"collider_type": "Solid",
+			"position_x": 1400,
+			"position_y": 340,
+			"width": 200,
+			"height": 200,
+			"color": { "r": 60, "g": 60, "b": 60 }
+		},
+		{
+			"collider_type": "OneWay",
+			"position_x": 1600,
+			"position_y": 280,
+			"width": 100,
+			"height": 20,
+			"color": { "r": 100, "g": 100, "b": 200 }
+		},
+		{
+			"collider_type": "OneWay",
+			"position_x": 1700,
+			"position_y": 200,
+			"width": 100,
+			"height": 20,
+			"color": { "r": 100, "g": 100, "b": 200 }
+		},
+		{
+			"collider_type": "Solid",
+			"position_x": 1800,
+			"position_y": 140,
+			"width": 120,
+			"height": 400,
+			"color": { "r": 60, "g": 60, "b": 60 }
 		}
 	],
 	"coins": [
-		{
-			"position_x": 200,
-			"position_y": 450
-		},
-		{
-			"position_x": 800,
-			"position_y": 350
-		},
-		{
-			"position_x": 400,
-			"position_y": 450
-		},
-		{
-			"position_x": 600,
-			"position_y": 350
-		},
-		{
-			"position_x": 550,
-			"position_y": 220
-		}
+		{ "position_x": 150, "position_y": 455 },
+		{ "position_x": 250, "position_y": 455 },
+		{ "position_x": 350, "position_y": 455 },
+		{ "position_x": 420, "position_y": 470 },
+		{ "position_x": 540, "position_y": 390 },
+		{ "position_x": 660, "position_y": 305 },
+		{ "position_x": 820, "position_y": 220 },
+		{ "position_x": 960, "position_y": 420 },
+		{ "position_x": 1010, "position_y": 420 },
+		{ "position_x": 1140, "position_y": 430 },
+		{ "position_x": 1240, "position_y": 390 },
+		{ "position_x": 1450, "position_y": 295 },
+		{ "position_x": 1500, "position_y": 295 },
+		{ "position_x": 1640, "position_y": 240 },
+		{ "position_x": 1740, "position_y": 160 }
 	],
 	"hazards": [
 		{
 			"position_x": 300,
-			"position_y": 450,
-			"size": {
-				"x": 50,
-				"y": 50
-			},
-			"color": {
-				"r": 200,
-				"g": 50,
-				"b": 50
-			}
+			"position_y": 455,
+			"size": { "x": 50, "y": 45 },
+			"color": { "r": 200, "g": 50, "b": 50 }
+		},
+		{
+			"position_x": 860,
+			"position_y": 455,
+			"size": { "x": 40, "y": 45 },
+			"color": { "r": 200, "g": 50, "b": 50 }
+		},
+		{
+			"position_x": 1380,
+			"position_y": 295,
+			"size": { "x": 20, "y": 45 },
+			"color": { "r": 200, "g": 50, "b": 50 }
 		}
 	],
 	"checkpoints": [
 		{
-			"position_x": 600,
-			"position_y": 206,
+			"position_x": 960,
+			"position_y": 396,
 			"size": { "x": 32, "y": 64 }
 		}
 	]
