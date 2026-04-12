@@ -10,27 +10,23 @@ const camera_mod = @import("camera.zig");
 const physics_mod = @import("physics.zig");
 const ui_mod = @import("ui.zig");
 const level_loader_mod = @import("level_loader.zig");
+const config = @import("config.zig");
 
 const FIRST_LEVEL_PATH = "assets/levels/level_1.json";
-const MAX_PATH_LEN = 260;
 
 pub fn main() anyerror!void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit(); // Frees EVERYTHING at once
 
     // Initialization phase - set up window and basic systems
-    const SCREEN_WIDTH = 1280;
-    const MIN_SCREEN_WIDTH = 720;
-    const SCREEN_HEIGHT = 720;
-    const MIN_SCREEN_HEIGHT = 480;
     var current_level_path: []const u8 = FIRST_LEVEL_PATH;
-    var current_level_path_buffer: [MAX_PATH_LEN]u8 = undefined;
+    var current_level_path_buffer: [config.MAX_PATH_LEN]u8 = undefined;
 
     rl.setConfigFlags(.{ .window_resizable = true, .vsync_hint = true });
 
-    rl.initWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "plat");
+    rl.initWindow(config.SCREEN_WIDTH, config.SCREEN_HEIGHT, "plat");
     defer rl.closeWindow(); // Close window and OpenGL context
-    rl.setWindowMinSize(MIN_SCREEN_WIDTH, MIN_SCREEN_HEIGHT);
+    rl.setWindowMinSize(config.MIN_SCREEN_WIDTH, config.MIN_SCREEN_HEIGHT);
     rl.maximizeWindow();
 
     // rl.setTargetFPS(60);
@@ -93,13 +89,13 @@ pub fn main() anyerror!void {
         ui_mod.drawDebugHud(&player, &level, &camera, input.show_debug);
 
         // Coin counter in the top right corner
-        ui_mod.drawText(@intCast(CURRENT_SCREEN_WIDTH - 100), 10, 20, rl.Color.black, "Coins: {d}", .{player.coins_collected});
+        ui_mod.drawText(@intCast(CURRENT_SCREEN_WIDTH - config.UI_COIN_COUNTER_X_OFFSET), config.UI_COIN_COUNTER_Y, config.UI_COIN_COUNTER_FONT_SIZE, rl.Color.black, "Coins: {d}", .{player.coins_collected});
 
         if (level.is_completed) {
             ui_mod.drawText(
                 @intCast(@divTrunc(CURRENT_SCREEN_WIDTH, 2)),
                 @intCast(@divTrunc(CURRENT_SCREEN_HEIGHT, 2)),
-                40,
+                config.UI_COMPLETION_TEXT_FONT_SIZE,
                 rl.Color.black,
                 "Level completed! Loading next level...",
                 .{},

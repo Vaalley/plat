@@ -10,6 +10,7 @@ const player_mod = @import("player.zig");
 const hazard_mod = @import("hazard.zig");
 const checkpoint_mod = @import("checkpoint.zig");
 const goal_mod = @import("goal.zig");
+const config = @import("config.zig");
 
 const ColorData = struct {
     r: u8,
@@ -74,9 +75,7 @@ pub fn loadLevelDataFromFile(allocator: std.mem.Allocator, file_path: []const u8
     const file = try std.fs.cwd().openFile(file_path, .{});
     defer file.close();
 
-    // TODO: readToEndAlloc is deprecated, use reader in the future instead (I am too stupid to figure it out now, and this works)
-    // Additionally, 1024 * 1024 is a magic number (maybe fix this in the future?)
-    const content = try file.readToEndAlloc(allocator, 1024 * 1024);
+    const content = try file.readToEndAlloc(allocator, config.MAX_LEVEL_FILE_SIZE);
 
     const level_data = try std.json.parseFromSliceLeaky(LevelData, allocator, content, .{});
     return level_data;
@@ -92,7 +91,7 @@ pub fn buildLevel(level_data: LevelData, allocator: std.mem.Allocator) !level_mo
     errdefer allocator.free(level.colliders);
     for (0..level.colliders.len) |i| {
         const collider_data = level_data.colliders[i];
-        const color = rl.Color{ .r = collider_data.color.r, .g = collider_data.color.g, .b = collider_data.color.b, .a = 255 };
+        const color = rl.Color{ .r = collider_data.color.r, .g = collider_data.color.g, .b = collider_data.color.b, .a = config.COLOR_ALPHA_MAX };
 
         level.colliders[i] = collider_mod.init(.{ .x = collider_data.position_x, .y = collider_data.position_y }, .{ .x = collider_data.width, .y = collider_data.height }, color, collider_data.collider_type);
 
@@ -116,7 +115,7 @@ pub fn buildLevel(level_data: LevelData, allocator: std.mem.Allocator) !level_mo
     errdefer allocator.free(level.hazards);
     for (0..level.hazards.len) |i| {
         const hazard_data = level_data.hazards[i];
-        const color = rl.Color{ .r = hazard_data.color.r, .g = hazard_data.color.g, .b = hazard_data.color.b, .a = 255 };
+        const color = rl.Color{ .r = hazard_data.color.r, .g = hazard_data.color.g, .b = hazard_data.color.b, .a = config.COLOR_ALPHA_MAX };
 
         level.hazards[i] = hazard_mod.init(hazard_data.position_x, hazard_data.position_y, hazard_data.size, color);
     }

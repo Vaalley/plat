@@ -1,5 +1,6 @@
 //! Collectible coin entities.
 const rl = @import("raylib");
+const config = @import("config.zig");
 
 pub const Coin = struct {
     position: rl.Vector2,
@@ -10,7 +11,7 @@ pub const Coin = struct {
 pub fn init(x: f32, y: f32) Coin {
     return .{
         .position = .{ .x = x, .y = y },
-        .radius = 10,
+        .radius = config.COIN_RADIUS,
         .is_collected = false,
     };
 }

@@ -7,8 +7,7 @@ const collider_mod = @import("collider.zig");
 const hazard_mod = @import("hazard.zig");
 const checkpoint_mod = @import("checkpoint.zig");
 const goal_mod = @import("goal.zig");
-
-const LANDING_TOLERANCE: f32 = 10.0;
+const config = @import("config.zig");
 
 pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
     resolveColliderCollisions(player, level);
@@ -24,7 +23,7 @@ fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level
     for (level.colliders) |*collider| {
         const collider_hitbox = collider_mod.get_hitbox(collider);
         const collider_top = collider_hitbox.y;
-        const near_top = FEET_Y >= collider_top and FEET_Y <= collider_top + LANDING_TOLERANCE;
+        const near_top = FEET_Y >= collider_top and FEET_Y <= collider_top + config.LANDING_TOLERANCE;
 
         // Handle collisions for Solid colliders
         if (collider.collider_type == .Solid and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox)) {
@@ -120,7 +119,7 @@ fn resolveGoalCollisions(player: *player_mod.Player, level: *level_mod.Level) vo
     if (level.goal) |*goal| {
         if (rl.checkCollisionRecs(goal_mod.get_hitbox(goal), player_mod.get_hitbox(player)) and !level.is_completed) {
             level.is_completed = true;
-            level.completion_timer = 3.0; // 3 seconds to show completion
+            level.completion_timer = config.LEVEL_COMPLETION_TIMER;
 
             // freeze player velocity and acceleration
             player.velocity = .{ .x = 0, .y = 0 };

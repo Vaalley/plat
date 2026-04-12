@@ -2,10 +2,7 @@
 const rl = @import("raylib");
 
 const input_mod = @import("input.zig");
-
-const DEATH_Y: f32 = 800.0; // below screen
-const DASH_LOCKOUT_DURATION: f32 = 0.2;
-const DASH_COOLDOWN: f32 = 1.0;
+const config = @import("config.zig");
 
 pub const Player = struct {
     position: rl.Vector2,
@@ -36,14 +33,14 @@ pub fn init(spawn_x: f32, spawn_y: f32) Player {
         .spawn_position = .{ .x = spawn_x, .y = spawn_y },
         .velocity = .{ .x = 0, .y = 0 },
         .acceleration = .{ .x = 0, .y = 0 },
-        .move_speed = 200,
-        .jump_power = 550,
-        .gravity = 1500,
-        .dash_power = 800,
+        .move_speed = config.PLAYER_MOVE_SPEED,
+        .jump_power = config.PLAYER_JUMP_POWER,
+        .gravity = config.PLAYER_GRAVITY,
+        .dash_power = config.PLAYER_DASH_POWER,
         .dash_cooldown = 0,
-        .jumps_remaining = 2,
-        .hitbox_width = 32,
-        .hitbox_height = 64,
+        .jumps_remaining = config.PLAYER_MAX_JUMPS,
+        .hitbox_width = config.PLAYER_HITBOX_WIDTH,
+        .hitbox_height = config.PLAYER_HITBOX_HEIGHT,
         .is_grounded = false,
         .coins_collected = 0,
     };
@@ -55,7 +52,7 @@ pub fn respawnPlayer(player: *Player) void {
     player.acceleration = .{ .x = 0, .y = 0 };
     player.dash_cooldown = 0;
     player.is_grounded = false;
-    player.jumps_remaining = 2;
+    player.jumps_remaining = config.PLAYER_MAX_JUMPS;
 }
 
 pub fn update(player: *Player, deltaTime: f32, input: input_mod.InputState) void {
@@ -86,8 +83,8 @@ pub fn get_hitbox(player: *Player) rl.Rectangle {
 }
 
 fn handleMovement(player: *Player, input: input_mod.InputState) void {
-    // During dash, don't allow movement input (for the first 0.2 seconds) - A dash is 1 second long
-    if (player.dash_cooldown > DASH_COOLDOWN - DASH_LOCKOUT_DURATION) return;
+    // During dash, don't allow movement input (for the first lockout duration)
+    if (player.dash_cooldown > config.PLAYER_DASH_COOLDOWN - config.PLAYER_DASH_LOCKOUT_DURATION) return;
 
     if (input.move_left and !input.move_right) {
         player.velocity.x = -player.move_speed;
@@ -110,7 +107,7 @@ fn updatePosition(player: *Player, deltaTime: f32) void {
     player.position.x += player.velocity.x * deltaTime;
     player.position.y += player.velocity.y * deltaTime;
 
-    if (player.position.y > DEATH_Y) {
+    if (player.position.y > config.DEATH_Y) {
         respawnPlayer(player);
     }
 }
@@ -126,6 +123,6 @@ fn handleDash(player: *Player, input: input_mod.InputState, deltaTime: f32) void
         // Dash in current facing direction
         const dashDirection: f32 = if (player.velocity.x >= 0) 1.0 else -1.0;
         player.velocity.x = dashDirection * player.dash_power;
-        player.dash_cooldown = DASH_COOLDOWN;
+        player.dash_cooldown = config.PLAYER_DASH_COOLDOWN;
     }
 }
