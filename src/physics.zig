@@ -77,7 +77,7 @@ fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level
 
     // This is here for now, but may be moved later on
     if (player.is_grounded) {
-        player.jumps_remaining = 2;
+        player.jumps_remaining = config.PLAYER_MAX_JUMPS;
     }
 }
 
