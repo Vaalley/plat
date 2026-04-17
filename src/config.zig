@@ -32,7 +32,7 @@ pub const UI_DEBUG_PANEL_WIDTH: f32 = 280;
 pub const UI_DEBUG_LINE_HEIGHT: f32 = 20;
 pub const UI_DEBUG_LINE_COUNT: i32 = 11;
 pub const UI_DEBUG_PADDING: f32 = 10;
-pub const UI_DEBUG_BUFFER_SIZE: i32 = 128;
+pub const UI_DEBUG_BUFFER_SIZE: usize = 128;
 pub const UI_DEBUG_HEADER_HEIGHT: f32 = 30;
 
 pub const UI_COIN_COUNTER_X_OFFSET: i32 = 100;
@@ -45,6 +45,5 @@ pub const UI_COMPLETION_TEXT_FONT_SIZE: i32 = 40;
 pub const COIN_RADIUS: f32 = 10;
 
 // Level Loading
-pub const MAX_PATH_LEN: i32 = 260;
-pub const MAX_LEVEL_FILE_SIZE: usize = 1024 * 1024; // 1MB
+pub const MAX_PATH_LEN: usize = 260;
 pub const COLOR_ALPHA_MAX: u8 = 255;

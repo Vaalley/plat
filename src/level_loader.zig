@@ -71,11 +71,8 @@ pub const LevelData = struct {
 };
 
 /// Loads level data from a JSON file using std.json
-pub fn loadLevelDataFromFile(allocator: std.mem.Allocator, file_path: []const u8) !LevelData {
-    const file = try std.fs.cwd().openFile(file_path, .{});
-    defer file.close();
-
-    const content = try file.readToEndAlloc(allocator, config.MAX_LEVEL_FILE_SIZE);
+pub fn loadLevelDataFromFile(io: std.Io, allocator: std.mem.Allocator, file_path: []const u8) !LevelData {
+    const content = try std.Io.Dir.cwd().readFileAlloc(io, file_path, allocator, .unlimited);
 
     const level_data = try std.json.parseFromSliceLeaky(LevelData, allocator, content, .{});
     return level_data;
@@ -138,9 +135,9 @@ pub fn buildLevel(level_data: LevelData, allocator: std.mem.Allocator) !level_mo
     return level;
 }
 
-pub fn loadLevelFromPath(arena: *std.heap.ArenaAllocator, level: *level_mod.Level, player: *player_mod.Player, path: []const u8) !void {
+pub fn loadLevelFromPath(io: std.Io, arena: *std.heap.ArenaAllocator, level: *level_mod.Level, player: *player_mod.Player, path: []const u8) !void {
     _ = arena.reset(.retain_capacity); // Free all, keep memory
-    const level_data = try loadLevelDataFromFile(arena.allocator(), path);
+    const level_data = try loadLevelDataFromFile(io, arena.allocator(), path);
     level.* = try buildLevel(level_data, arena.allocator());
     player.spawn_position = .{ .x = level_data.player_spawn_point.position_x, .y = level_data.player_spawn_point.position_y };
     player.coins_collected = 0;

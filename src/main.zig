@@ -14,7 +14,9 @@ const config = @import("config.zig");
 
 const FIRST_LEVEL_PATH = "assets/levels/level_1.json";
 
-pub fn main() anyerror!void {
+pub fn main(init: std.process.Init) anyerror!void {
+    const io = init.io;
+
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit(); // Frees EVERYTHING at once
 
@@ -32,7 +34,7 @@ pub fn main() anyerror!void {
     // rl.setTargetFPS(60);
 
     // Initialize game objects
-    const level_data = try level_loader_mod.loadLevelDataFromFile(arena.allocator(), current_level_path);
+    const level_data = try level_loader_mod.loadLevelDataFromFile(io, arena.allocator(), current_level_path);
     var player: player_mod.Player = player_mod.init(level_data.player_spawn_point.position_x, level_data.player_spawn_point.position_y);
     var input = input_mod.init();
     var level = try level_loader_mod.buildLevel(level_data, arena.allocator());
@@ -55,7 +57,7 @@ pub fn main() anyerror!void {
             player_mod.update(&player, DELTA_TIME, input);
             level_mod.update(&level, DELTA_TIME);
             if (input.reload_level) {
-                try level_loader_mod.loadLevelFromPath(&arena, &level, &player, current_level_path);
+                try level_loader_mod.loadLevelFromPath(io, &arena, &level, &player, current_level_path);
             }
 
             // Physics phase - resolve movement and collisions
@@ -66,7 +68,7 @@ pub fn main() anyerror!void {
                 if (level.goal) |goal| {
                     if (goal.next_level) |next_level_path| {
                         current_level_path = try std.fmt.bufPrint(&current_level_path_buffer, "{s}", .{next_level_path});
-                        try level_loader_mod.loadLevelFromPath(&arena, &level, &player, current_level_path);
+                        try level_loader_mod.loadLevelFromPath(io, &arena, &level, &player, current_level_path);
                     }
                 }
             }
