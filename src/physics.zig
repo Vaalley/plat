@@ -19,6 +19,7 @@ pub fn resolvePlayerCollisions(player: *player_mod.Player, level: *level_mod.Lev
 
 fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
     const FEET_Y = player.position.y + player.hitbox_height;
+    const player_hitbox = player_mod.get_hitbox(player);
 
     for (level.colliders) |*collider| {
         const collider_hitbox = collider_mod.get_hitbox(collider);
@@ -26,7 +27,7 @@ fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level
         const near_top = FEET_Y >= collider_top and FEET_Y <= collider_top + config.LANDING_TOLERANCE;
 
         // Handle collisions for Solid colliders
-        if (collider.collider_type == .Solid and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox)) {
+        if (collider.collider_type == .Solid and rl.checkCollisionRecs(player_hitbox, collider_hitbox)) {
             // Calculate overlap on each axis to find smallest penetration
             const overlap_top = (player.position.y + player.hitbox_height) - collider_hitbox.y; // how far into collider from top
             const overlap_bottom = (collider_hitbox.y + collider_hitbox.height) - player.position.y; // how far into collider from bottom
@@ -57,14 +58,14 @@ fn resolveColliderCollisions(player: *player_mod.Player, level: *level_mod.Level
         }
 
         // Handle collisions for OneWay colliders
-        if (collider.collider_type == .OneWay and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox) and player.velocity.y >= 0 and near_top) {
+        if (collider.collider_type == .OneWay and rl.checkCollisionRecs(player_hitbox, collider_hitbox) and player.velocity.y >= 0 and near_top) {
             player.is_grounded = true;
             player.position.y = collider_hitbox.y - player.hitbox_height;
             player.velocity.y = 0;
         }
 
         // Handle collisions for Crumbling colliders (like OneWay + start timer)
-        if (collider.collider_type == .Crumbling and collider.is_active and rl.checkCollisionRecs(player_mod.get_hitbox(player), collider_hitbox) and player.velocity.y >= 0 and near_top) {
+        if (collider.collider_type == .Crumbling and collider.is_active and rl.checkCollisionRecs(player_hitbox, collider_hitbox) and player.velocity.y >= 0 and near_top) {
             player.is_grounded = true;
             player.position.y = collider_hitbox.y - player.hitbox_height;
             player.velocity.y = 0;
@@ -100,17 +101,15 @@ fn resolveHazardCollisions(player: *player_mod.Player, level: *level_mod.Level) 
 }
 
 fn resolveCheckpointCollisions(player: *player_mod.Player, level: *level_mod.Level) void {
+    const player_hitbox = player_mod.get_hitbox(player);
     for (level.checkpoints) |*checkpoint| {
-        if (rl.checkCollisionRecs(checkpoint_mod.get_hitbox(checkpoint), player_mod.get_hitbox(player))) {
-            // deactivate all checkpoints and then activate this one
+        if (!checkpoint.is_active and rl.checkCollisionRecs(checkpoint_mod.get_hitbox(checkpoint), player_hitbox)) {
             for (level.checkpoints) |*other_checkpoint| {
                 other_checkpoint.is_active = false;
             }
-
-            if (!checkpoint.is_active) {
-                checkpoint.is_active = true;
-                player.spawn_position = checkpoint.position;
-            }
+            checkpoint.is_active = true;
+            player.spawn_position = checkpoint.position;
+            break;
         }
     }
 }
