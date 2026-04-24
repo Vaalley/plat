@@ -6,7 +6,7 @@ A simple 2D platformer built with Zig and Raylib.
 
 ## Tech Stack
 
-- **Language:** Zig 0.15.1
+- **Language:** Zig 0.16.0
 - **Graphics:** Raylib (via raylib-zig bindings)
 - **Build System:** Zig build
 
