@@ -30,7 +30,6 @@ pub const UI_DEBUG_PANEL_X: f32 = 10;
 pub const UI_DEBUG_PANEL_Y: f32 = 10;
 pub const UI_DEBUG_PANEL_WIDTH: f32 = 280;
 pub const UI_DEBUG_LINE_HEIGHT: f32 = 20;
-pub const UI_DEBUG_LINE_COUNT: i32 = 11;
 pub const UI_DEBUG_PADDING: f32 = 10;
 pub const UI_DEBUG_BUFFER_SIZE: usize = 128;
 pub const UI_DEBUG_HEADER_HEIGHT: f32 = 30;
